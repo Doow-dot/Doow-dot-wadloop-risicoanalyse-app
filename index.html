@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta property="og:image" content="https://website-b1a034.netlify.app/.netlify/og-image/20b824d0c49b0e29ea65693a8bc7ed54.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<title>Risicoanalyse Wadlooptocht</title>
+<style>
+:root{--primary:#14415A;--light:#f5f8fa;--border:#d7dfe5}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:20px;background:#f4f6f8;color:#222;line-height:1.4;accent-color:var(--primary)}
+.container{max-width:1200px;margin:auto;background:#fff;padding:30px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+h1{color:var(--primary);margin-bottom:0}
+h2{background:var(--primary);color:#fff;padding:10px 15px;margin-top:35px;break-after:avoid}
+.notice{background:#fff6d8;border-left:5px solid #d1a300;padding:10px;margin:20px 0}
+.instructions{background:#eef5fa;padding:12px;border-left:4px solid var(--primary);margin:15px 0;font-style:italic}
+table{width:100%;border-collapse:collapse;margin-bottom:15px}
+th,td{border:1px solid var(--border);padding:10px;vertical-align:top}
+th{width:35%;background:#f6f8fa;text-align:left}
+tr{break-inside:avoid}
+input[type=text],input[type=number],input[type=time],input[type=date],textarea,select{width:100%;padding:8px;box-sizing:border-box}
+textarea{min-height:90px;resize:vertical;overflow:hidden}
+:focus-visible{outline:3px solid #2a7fb0;outline-offset:2px}
+.inline{display:flex;flex-wrap:wrap;gap:15px}
+.inline label{white-space:nowrap}
+.stack{display:flex;flex-direction:column;gap:6px}
+.veld{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.veld input{flex:1 1 120px;min-width:0}
+.veld:last-child{margin-bottom:0}
+.opties{display:flex;flex-wrap:wrap;gap:6px 15px;align-items:center}
+.opties input[type=text]{flex:1 1 180px;width:auto}
+.go-nogo{background:#fff4f4;border:2px solid #cc2b2b;padding:15px;break-inside:avoid}
+#waarschuwing{display:none;background:#fff;border:3px solid #cc2b2b;color:#8a1111;padding:10px 15px;margin:15px 0;font-weight:bold}
+#waarschuwing.zichtbaar{display:block}
+#waarschuwing ul{margin:6px 0 0;padding-left:20px;font-weight:normal}
+.geul-rij{display:grid;grid-template-columns:auto minmax(120px,1fr) 110px 24px auto;gap:8px;align-items:center;margin-bottom:6px}
+.geul-rij:last-child{margin-bottom:0}
+@media screen and (min-width:701px),print{.geul-lijst[data-soort=passage] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 140px}}
+.geul-keuze{display:flex;gap:10px;white-space:nowrap}
+.geul-label{font-weight:bold;white-space:nowrap}
+.aandachtspunten{gap:8px 15px;margin-bottom:8px}
+.anders-rij{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.anders-rij label{white-space:nowrap}
+.footer-text{font-style:italic;color:#444;margin-top:8px}
+.buttons{margin-top:30px}
+[hidden]{display:none!important}
+button{background:var(--primary);color:#fff;border:none;padding:12px 20px;cursor:pointer;margin-right:10px;font-size:1rem}
+button.secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
+.bewaar-info{font-size:.9rem;color:#444;margin:10px 0 0}
+#save-status{margin-top:10px;color:var(--primary)}
+
+@media screen and (max-width:700px){
+body{padding:0;font-size:16px}
+.container{padding:16px 14px 24px;box-shadow:none}
+h1{font-size:1.6rem}
+h3{margin:4px 0 0;font-size:1rem;color:#4a5a66}
+h2{font-size:1.05rem;margin:28px -14px 12px;padding:10px 14px}
+table,tbody,tr,th,td{display:block;width:auto}
+table{margin-bottom:12px}
+tr{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+th,td{border:none}
+th{padding:10px 12px;font-size:.95rem;border-bottom:1px solid var(--border)}
+td{padding:12px}
+input[type=text],input[type=number],input[type=time],input[type=date],textarea,select{font-size:16px;min-height:44px;min-width:0;max-width:100%;margin:4px 0;border:1px solid #b9c6cf;border-radius:6px;background:#fff}
+textarea{min-height:100px}
+form label:has(input[type=checkbox]),form label:has(input[type=radio]){display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;margin:3px 0;border:1px solid var(--border);border-radius:22px;background:#fff;box-sizing:border-box;white-space:normal}
+form label:has(input:checked){border-color:var(--primary);background:#e6eef3}
+form label input[type=checkbox],form label input[type=radio]{width:20px;height:20px;margin:0;flex:none}
+.inline{gap:6px}
+.inline label{white-space:normal}
+.veld{flex-wrap:wrap}
+.anders-rij{flex-wrap:wrap;gap:4px 8px}
+.anders-rij input[type=text]{flex:1 1 160px}
+.geul-rij{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:var(--light);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px}
+.geul-rij>*{flex:1 1 100%;min-width:0;max-width:100%}
+.geul-rij input[type=number]{flex:1 1 0;width:auto}
+.geul-rij input[type=number]+span{flex:0 0 auto}
+.geul-rij span:empty{display:none}
+.geul-keuze{gap:6px;white-space:normal}
+.geul-keuze label{flex:1;justify-content:center}
+.buttons{display:flex;flex-direction:column;gap:10px}
+button{width:100%;margin:0;min-height:48px;border-radius:8px}
+}
+@media print{
+button,.bewaar-info,#save-status{display:none!important}
+body{background:#fff;padding:0}
+.container{box-shadow:none;padding:0}
+textarea{resize:none}
+}
+</style>
+
+<meta name="theme-color" content="#14415A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+
+<body>
+<main class="container">
+
+<h1>RISICOANALYSE</h1>
+<h3>WADLOOPTOCHT | Praktisch beslisformulier</h3>
+
+<div class="notice">
+VERPLICHT DOCUMENT • Volledig ingevuld aanwezig tijdens de wadlooptocht conform de vergunningsvoorschriften behorende bij de Wadloopverordening 2023.
+</div>
+
+<form novalidate>
+
+<h2>0 | TOCHTGEGEVENS</h2>
+
+<table>
+<tr>
+<th scope="row">Vergunninghouder</th>
+<td class="stack">
+<select id="vergunninghouder">
+<option value="">Kies een vergunninghouder…</option>
+<option>Wadloopcentrum Fryslân</option>
+<option>Wadloopcentrum Pieterburen</option>
+<option>Dijkstra Wadlooptochten</option>
+<option>Wadloopvereniging Arenicola</option>
+<option>Fryske Waedrinners</option>
+<option>Vrije Wadlopers</option>
+<option>Anders</option>
+</select>
+<input type="text" id="vergunninghouder-anders" aria-label="Vergunninghouder, anders namelijk" placeholder="Namelijk..." hidden>
+</td>
+</tr>
+<tr>
+<th scope="row">Datum</th>
+<td><input type="date"></td>
+</tr>
+<tr>
+<th scope="row">Route</th>
+<td class="stack">
+<select id="route">
+<option value="">Kies een route…</option>
+<option>Oversteek Ameland</option>
+<option>Oversteek Schiermonnikoog</option>
+<option>Brakzand-Schiermonnikoog</option>
+<option>Oversteek Engelsmanplaat/Rif</option>
+<option>Zwerftocht Pieterburen</option>
+<option>Zwerftocht Engelsmanplaat/Rif</option>
+<option>Oversteek Terschelling</option>
+<option>Oversteek Rottum</option>
+<option>Anders</option>
+</select>
+<input type="text" id="route-anders" aria-label="Route, anders namelijk" placeholder="Namelijk..." hidden>
+</td>
+</tr>
+<tr>
+<th scope="row">Geplande vertrektijd / eindtijd</th>
+<td>
+<div class="inline">
+<input type="time" aria-label="Geplande vertrektijd">
+<input type="time" aria-label="Geplande eindtijd">
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row">Aantal gidsen / begeleiders</th>
+<td>
+<p>(n.v.t. solo-lopers)</p>
+<label class="veld">Gidsen <input type="number" min="0"></label>
+<label class="veld">Begeleiders <input type="number" min="0"></label>
+</td>
+</tr>
+<tr>
+<th scope="row">Aantal deelnemers</th>
+<td>
+<input type="number" min="0">
+<small>(n.v.t. solo-lopers)</small>
+</td>
+</tr>
+</table>
+
+<h2>WERKWIJZE</h2>
+
+<div class="instructions">
+Vul de kerngegevens in, omcirkel of vink relevante aandachtspunten aan en beoordeel per onderdeel het risico. Noteer alleen bij een verhoogd risico de motivering en maatregelen. Beoordeel daarna opnieuw of het restrisico aanvaardbaar is. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
+</div>
+
+<h2>1 | WEER</h2>
+
+<table>
+
+<tr>
+<th scope="row">KNMI-waarschuwing op route</th>
+<td>
+<div class="opties">
+<label><input type="radio" name="knmi"> Nee</label>
+<label><input type="radio" name="knmi"> Ja</label>
+</div>
+<div class="stack" style="margin-top:10px">
+<select id="knmi-soort" aria-label="Soort KNMI-waarschuwing">
+<option value="">Kies een waarschuwing…</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hitte">Hitte</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/kou">Kou</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zicht">Mist</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/onweersbuien">Onweersbuien</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/sneeuw-en-gladheid">Sneeuw</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hozen">Waterhozen</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/windstoten">Windstoten</option>
+<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zware-regen">Zware regen</option>
+</select>
+<a id="knmi-link" href="#" target="_blank" rel="noopener" style="color:var(--primary)" hidden></a>
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Windrichting / windkracht</th>
+<td>
+<select aria-label="Windrichting">
+<option value="">Kies windrichting…</option>
+<option>N</option>
+<option>NO</option>
+<option>O</option>
+<option>ZO</option>
+<option>Z</option>
+<option>ZW</option>
+<option>W</option>
+<option>NW</option>
+</select>
+<div class="opties" style="margin-top:10px">
+<input type="number" min="0" max="12" placeholder="Bft" data-koppel="bft" style="max-width:140px">
+<label><input type="checkbox" data-doel="bft-hoog"> &gt;5 Bft</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Temperatuur / gevoelstemperatuur</th>
+<td>
+<div class="inline">
+<input type="number" placeholder="Temperatuur °C" data-koppel="temp">
+<input type="number" placeholder="Gevoelstemperatuur °C" data-koppel="temp">
+</div>
+<div class="opties" style="margin-top:10px">
+<label><input type="checkbox" data-doel="temp-laag"> &lt;10 °C</label>
+<label><input type="checkbox" data-doel="temp-hoog"> &gt;25 °C</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Watertemperatuur</th>
+<td>
+<div class="opties">
+<input type="number" placeholder="°C" data-koppel="water" style="max-width:140px">
+<label><input type="checkbox" data-doel="water-laag"> &lt;10 °C</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Zicht</th>
+<td>
+<select id="zicht">
+<option value="">Kies zicht…</option>
+<option>goed</option>
+<option>beperkt</option>
+<option>slecht</option>
+<option>volledig zon onder</option>
+<option>gedeeld zon op/onder</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Neerslag</th>
+<td>
+<select id="neerslag">
+<option value="">Kies neerslag…</option>
+<option>droog</option>
+<option>mist</option>
+<option>regen</option>
+<option>sneeuw</option>
+<option>ijs</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Bijzonderheden</th>
+<td>
+<div class="opties">
+<label><input type="radio" name="bijz"> Nee</label>
+<label><input type="radio" name="bijz"> Ja</label>
+<input type="text" aria-label="Toelichting bijzonderheden">
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Verwachte verandering tijdens tocht</th>
+<td>
+<input type="text" placeholder="geen, windtoename, front, buien, afkoeling, anders">
+</td>
+</tr>
+
+<tr>
+<th scope="row">Risico vóór maatregelen</th>
+<td class="opties">
+<label><input type="radio" name="weer1"> LAAG</label>
+<label><input type="radio" name="weer1"> VERHOOGD</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Motivering / maatregelen bij verhoogd risico</th>
+<td><textarea></textarea></td>
+</tr>
+
+<tr>
+<th scope="row">Risico ná maatregelen</th>
+<td class="stack">
+<label><input type="radio" name="weer2"> LAAG</label>
+<label><input type="radio" name="weer2"> VERHOOGD MAAR BEHEERSBAAR</label>
+<label><input type="radio" name="weer2"> ONACCEPTABEL</label>
+</td>
+</tr>
+
+</table>
+
+<div class="instructions">
+Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, onweer en combinatie van kou, wind en natte kleding. Vergunningsvoorschriften aangaande mist en onweer zijn leidend.
+</div>
+
+<h2>2 | WATER- EN ROUTECONDITIES</h2>
+
+<table>
+<tr>
+<th scope="row">Voorspelde laagwaterstand</th>
+<td>
+<label class="veld">cm NAP <input type="number"></label>
+<label class="veld">Meetstation <input type="text"></label>
+<label class="veld">Tijd <input type="time"></label>
+<div>Bron: RWS</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Verwachte geuldiepten</th>
+<td>
+<div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
+<div class="geul-lijst" data-soort="diepte">
+<div class="geul-rij"><span class="geul-label">Geul 1</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam">
+<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 1 diepte in cm"><span>cm</span>
+<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 2</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam">
+<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 2 diepte in cm"><span>cm</span>
+<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 3</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam">
+<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 3 diepte in cm"><span>cm</span>
+<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 4</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam">
+<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 4 diepte in cm"><span>cm</span>
+<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
+</div></td>
+</tr>
+
+<tr>
+<th scope="row">Uitwijkmogelijkheden</th>
+<td>
+<div class="opties">
+<label><input type="radio" name="uitwijk"> Niet aanwezig</label>
+<label><input type="radio" name="uitwijk"> Aanwezig</label>
+<input type="text" placeholder="Locaties">
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Bodem / stroming / bijzonderheden</th>
+<td>
+<label><input type="checkbox"> Geen bijzonderheden</label>
+<textarea style="margin-top:8px"></textarea>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Risico vóór maatregelen</th>
+<td class="opties">
+<label><input type="radio" name="water1"> LAAG</label>
+<label><input type="radio" name="water1"> VERHOOGD</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Motivering / maatregelen</th>
+<td><textarea></textarea></td>
+</tr>
+
+<tr>
+<th scope="row">Risico ná maatregelen</th>
+<td class="stack">
+<label><input type="radio" name="water2"> LAAG</label>
+<label><input type="radio" name="water2"> VERHOOGD MAAR BEHEERSBAAR</label>
+<label><input type="radio" name="water2"> ONACCEPTABEL</label>
+</td>
+</tr>
+
+</table>
+
+<h2>3 | GROEPSANALYSE</h2>
+
+<table>
+<tr>
+<th scope="row">Zwaarte van de tocht uitgelegd</th>
+<td class="opties">
+<label><input type="radio" name="zwaarte"> Ja</label>
+<label><input type="radio" name="zwaarte"> Nee</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Voorgeschreven uitrusting gecontroleerd</th>
+<td class="opties">
+<label><input type="radio" name="uitr"> Ja</label>
+<label><input type="radio" name="uitr"> Nee</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Bijzondere aandachtspunten</th>
+<td>
+<div class="inline aandachtspunten">
+<label><input type="checkbox"> Kinderen</label>
+<label><input type="checkbox"> Ouderen</label>
+<label><input type="checkbox"> Beperkte conditie</label>
+<label><input type="checkbox"> Blessures/beperkingen</label>
+<label><input type="checkbox"> Taal/communicatie</label>
+<label><input type="checkbox"> Groepsgrootte</label>
+<label><input type="checkbox"> Groepsdynamiek</label>
+<label><input type="checkbox"> Lengte deelnemers</label>
+</div>
+<div class="anders-rij">
+<label><input type="checkbox"> Anders:</label>
+<input type="text" aria-label="Anders, namelijk">
+</div>
+<textarea placeholder="Toelichting" aria-label="Toelichting aandachtspunten"></textarea>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Risico vóór maatregelen</th>
+<td class="opties">
+<label><input type="radio" name="groep1"> LAAG</label>
+<label><input type="radio" name="groep1"> VERHOOGD</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Motivering / maatregelen</th>
+<td><textarea></textarea></td>
+</tr>
+
+<tr>
+<th scope="row">Risico ná maatregelen</th>
+<td class="stack">
+<label><input type="radio" name="groep2"> LAAG</label>
+<label><input type="radio" name="groep2"> VERHOOGD MAAR BEHEERSBAAR</label>
+<label><input type="radio" name="groep2"> ONACCEPTABEL</label>
+</td>
+</tr>
+</table>
+
+<h2>4 | VEILIGHEIDSMARGES</h2>
+
+<table>
+<tr>
+<th scope="row">Uiterste aanvaardbare vertrektijd</th>
+<td><input type="time"></td>
+</tr>
+
+<tr>
+<th scope="row">Uiterste tijd(en) geulpassage</th>
+<td>
+<div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
+<div class="geul-lijst" data-soort="passage">
+<div class="geul-rij"><span class="geul-label">Geul 1</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam (geulpassage)">
+<input type="time" aria-label="Geul 1 uiterste tijd geulpassage"></div>
+<div class="geul-rij"><span class="geul-label">Geul 2</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam (geulpassage)">
+<input type="time" aria-label="Geul 2 uiterste tijd geulpassage"></div>
+<div class="geul-rij"><span class="geul-label">Geul 3</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam (geulpassage)">
+<input type="time" aria-label="Geul 3 uiterste tijd geulpassage"></div>
+<div class="geul-rij"><span class="geul-label">Geul 4</span>
+<input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam (geulpassage)">
+<input type="time" aria-label="Geul 4 uiterste tijd geulpassage"></div>
+</div>
+<div style="margin-top:10px"><label><input type="checkbox" data-passend> Passend bij tijdschema</label></div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Point of no return</th>
+<td>
+<label class="veld">Locatie <input type="text"></label>
+<label class="veld">Tijd <input type="time"></label>
+<label><input type="checkbox"> Niet van toepassing</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Reservetijd</th>
+<td><label class="veld"><input type="number" min="0"> minuten</label></td>
+</tr>
+</table>
+
+<h2>5 | BEHEERSMAATREGELEN</h2>
+
+<table>
+<tr>
+<th scope="row">Communicatiemiddelen conform vergunning</th>
+<td class="opties">
+<label><input type="radio" name="comm"> Aanwezig en getest</label>
+<label><input type="radio" name="comm"> Niet in orde</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Noodmiddelen conform vergunning</th>
+<td class="opties">
+<label><input type="radio" name="nood"> Aanwezig en gecontroleerd</label>
+<label><input type="radio" name="nood"> Niet in orde</label>
+</td>
+</tr>
+</table>
+
+<div class="go-nogo">
+
+<h2>6 | GO / NO-GO BESLUIT</h2>
+
+<div id="waarschuwing" role="alert"></div>
+
+<table>
+
+<tr>
+<th scope="row">Bronnen geraadpleegd</th>
+<td>
+<p>(<a href="https://www.knmi.nl/home" target="_blank" rel="noopener" style="color:var(--primary)">KNMI</a> / <a href="https://waterinfo.rws.nl/publiek/waterhoogte" target="_blank" rel="noopener" style="color:var(--primary)">RWS</a> / <a href="https://www.knmi.nl/nederland-nu/maritiem/marifoon" target="_blank" rel="noopener" style="color:var(--primary)">marifoonbericht</a> / lokale waarneming)</p>
+<div class="opties">
+<label><input type="radio" name="bron"> Ja</label>
+<label><input type="radio" name="bron"> Nee</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Besluit</th>
+<td class="stack">
+<label><input type="radio" name="besluit"> TOCHT UITVOEREN</label>
+<label><input type="radio" name="besluit"> TOCHT ANNULEREN</label>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Toegepaste aanpassingen</th>
+<td><textarea></textarea></td>
+</tr>
+
+<tr>
+<th scope="row">Motivering besluit</th>
+<td><textarea></textarea></td>
+</tr>
+
+<tr>
+<th scope="row">Naam beslisser / datum / tijdstip</th>
+<td>
+<div class="inline">
+<input type="text" placeholder="Naam" aria-label="Naam beslisser">
+<input type="date" aria-label="Datum besluit" data-vandaag>
+<input type="time" aria-label="Tijdstip besluit">
+</div>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<h2>7 | EVALUATIE NA AFLOOP</h2>
+
+<div class="instructions">
+Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incidenten en leerpunten die relevant zijn voor volgende tochten.
+</div>
+
+<table>
+
+<tr>
+<th scope="row">Bijzonderheden tijdens de tocht</th>
+<td>
+<p>Wat gebeurde er? Denk aan weer, waterstand, geulpassages, route, groep of materiaal.</p>
+<textarea></textarea>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Geleerde lessen / verbeterpunten</th>
+<td>
+<p>Wat moet een volgende keer anders of extra worden gecontroleerd?</p>
+<textarea></textarea>
+</td>
+</tr>
+
+</table>
+
+<h2>TOELICHTING VOOR GIDSEN EN BEGELEIDERS</h2>
+
+<div class="footer-text">
+<p>Dit formulier helpt je om vóór vertrek op een gestructureerde manier stil te staan bij de belangrijkste risico’s van de wadlooptocht.</p>
+
+<p>Wanneer een verhoogd risico wordt vastgesteld, beschrijf je welke maatregelen zijn genomen en beoordeel je opnieuw of het restrisico aanvaardbaar is.</p>
+
+<p>Gebruik dit formulier als hulpmiddel bij je professionele afweging. Actuele omstandigheden in het veld, lokale kennis, getijdeninformatie, vergunningvoorschriften en aanwijzingen van bevoegde instanties blijven altijd leidend.</p>
+
+<p>Door bijzonderheden, incidenten en leerpunten na afloop vast te leggen, draagt dit formulier ook bij aan het lerend vermogen van gidsen en organisaties.</p>
+
+<p><strong>Gebruik van AI:</strong> Je kunt AI-ondersteuning gebruiken voor het verzamelen, verwerken en structureren van informatie en voor het signaleren van aandachtspunten. De verantwoordelijkheid voor de risicoanalyse blijft altijd bij de vergunninghouder of verantwoordelijke gids.</p>
+</div>
+
+<div class="buttons">
+<button type="button" onclick="window.print()">Opslaan als PDF / Afdrukken</button>
+<button type="submit">Opslaan</button>
+<button type="button" class="secondary" id="nieuw">Nieuw formulier</button>
+</div>
+
+<p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
+<p class="bewaar-info">Versie: 19-11-2026, 4</p>
+<div id="save-status" role="status" aria-live="polite"></div>
+
+</form>
+</main>
+
+<script>
+(function(){
+window.addEventListener('error',function(e){var s=document.getElementById('save-status');if(s)s.textContent='Scriptfout: '+e.message;});
+var KEY='risicoanalyse-wadlooptocht';
+var form=document.querySelector('form');
+var status=document.getElementById('save-status');
+var waarschuwing=document.getElementById('waarschuwing');
+
+/* 2. Toegankelijkheid: koppel rij-kop aan velden, groepeer keuzerondjes */
+Array.prototype.forEach.call(form.querySelectorAll('tr'),function(tr,i){
+var th=tr.querySelector('th'),td=tr.querySelector('td');
+if(!th||!td)return;
+th.id='kop'+i;
+if(td.querySelector('input[type=radio]')){td.setAttribute('role','radiogroup');td.setAttribute('aria-labelledby',th.id);}
+Array.prototype.forEach.call(td.querySelectorAll('input,select,textarea'),function(el){
+if(el.closest('label')||el.hasAttribute('aria-label')||el.type==='radio')return;
+el.setAttribute('aria-labelledby',th.id);
+});
+});
+
+/* 3. Veldsleutels op basis van sectie + rijkop + veld (niet op positie) */
+var fields=Array.prototype.slice.call(form.querySelectorAll('input,textarea,select'));
+function slug(s){return (s||'').replace(/\s+/g,' ').trim();}
+function sectie(el){
+var n=el.closest('table')||el.closest('.stack')||el;
+while(n&&n!==form){
+var p=n.previousElementSibling;
+while(p){if(p.tagName==='H2')return slug(p.textContent);p=p.previousElementSibling;}
+n=n.parentElement;
+if(n&&n.tagName==='DIV'&&n.querySelector(':scope > h2'))return slug(n.querySelector(':scope > h2').textContent);
+}
+return '';
+}
+var used={};
+var keys=fields.map(function(el){
+var tr=el.closest('tr'),th=tr&&tr.querySelector('th'),cont=el.closest('td')||form;
+var k=sectie(el)+'|'+(th?slug(th.textContent):'');
+if(el.type==='checkbox'||el.type==='radio'){var l=el.closest('label');k+='|'+(el.name||'')+'|'+slug(l?l.textContent:'');}
+else{var same=Array.prototype.filter.call(cont.querySelectorAll('input,textarea,select'),function(x){return x.type!=='checkbox'&&x.type!=='radio';});
+k+='|'+el.tagName+(el.type||'')+same.indexOf(el)+(el.getAttribute('aria-label')||'');}
+if(used[k]){used[k]++;k+='#'+used[k];}else used[k]=1;
+return k;
+});
+
+function isCheck(el){return el.type==='checkbox'||el.type==='radio';}
+function grow(t){t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px';}
+var textareas=fields.filter(function(el){return el.tagName==='TEXTAREA';});
+function growAll(){textareas.forEach(grow);}
+
+function save(melding){
+try{
+var data={};
+fields.forEach(function(el,i){data[keys[i]]=isCheck(el)?el.checked:el.value;});
+localStorage.setItem(KEY,JSON.stringify({v:2,data:data}));
+status.textContent=(melding||'Opgeslagen in deze browser')+' om '+new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+'.';
+}catch(e){status.textContent='Opslaan in deze browser is niet gelukt (mogelijk is opslag geblokkeerd). Gebruik “Opslaan als PDF / Afdrukken”.';}
+}
+
+/* 4. Herstellen (ook oud positioneel formaat) */
+var hersteld=false;
+try{
+var stored=JSON.parse(localStorage.getItem(KEY)||'null');
+if(stored&&stored.v===2){
+fields.forEach(function(el,i){
+if(!(keys[i] in stored.data))return;
+if(isCheck(el))el.checked=!!stored.data[keys[i]];else el.value=stored.data[keys[i]];
+});hersteld=true;
+}else if(Array.isArray(stored)&&stored.length===fields.length){
+fields.forEach(function(el,i){if(isCheck(el))el.checked=!!stored[i];else el.value=stored[i];});hersteld=true;
+}
+}catch(e){}
+if(hersteld)status.textContent='Eerder opgeslagen gegevens zijn hersteld.';
+
+/* 5. Standaard datum besluit = vandaag */
+var datum=form.querySelector('input[data-vandaag]');
+if(datum&&!datum.value)datum.value=new Date().toLocaleDateString('sv-SE');
+
+/* 6. Gekoppelde velden: getal vult vinkvak automatisch (handmatig aanpassen blijft mogelijk) */
+function box(n){return form.querySelector('[data-doel="'+n+'"]');}
+function waarden(n){return Array.prototype.map.call(form.querySelectorAll('[data-koppel="'+n+'"]'),function(i){return parseFloat(i.value);}).filter(function(v){return !isNaN(v);});}
+function koppel(){
+var bft=waarden('bft'),temp=waarden('temp'),w=waarden('water');
+if(bft.length)box('bft-hoog').checked=bft[0]>5;
+if(temp.length){box('temp-laag').checked=Math.min.apply(null,temp)<10;box('temp-hoog').checked=Math.max.apply(null,temp)>25;}
+if(w.length)box('water-laag').checked=w[0]<10;
+Array.prototype.forEach.call(form.querySelectorAll('.geul-rij'),function(r){
+var d=r.querySelector('[data-diepte]'),c=r.querySelector('[data-diep-hoog]');
+if(d&&c&&d.value!==''&&!isNaN(parseFloat(d.value)))c.checked=parseFloat(d.value)>=119;
+});
+}
+
+/* 6b. Weer: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
+function weerRisico(){
+var ja=form.querySelector('input[name="knmi"]:checked');
+var zicht=document.getElementById('zicht').value,nsl=document.getElementById('neerslag').value;
+var hoog=(ja&&slug(ja.closest('label').textContent)==='Ja')||box('bft-hoog').checked||box('temp-laag').checked||box('temp-hoog').checked||box('water-laag').checked||
+['beperkt','slecht','volledig zon onder'].indexOf(zicht)>-1||['mist','regen','sneeuw','ijs'].indexOf(nsl)>-1;
+if(hoog){var r=form.querySelectorAll('input[name="weer1"]')[1];if(r)r.checked=true;}
+}
+
+/* 6c. Water: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
+function waterRisico(){
+var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
+var uw=form.querySelector('input[name="uitwijk"]:checked');
+var geen=uw&&slug(uw.closest('label').textContent)==='Niet aanwezig';
+if(diep||geen){var r=form.querySelectorAll('input[name="water1"]')[1];if(r)r.checked=true;}
+}
+
+/* 6d. Groepsanalyse: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
+var aandTd=form.querySelector('.aandachtspunten').closest('td');
+function groepRisico(){
+var nee=['zwaarte','uitr'].some(function(n){var r=form.querySelector('input[name="'+n+'"]:checked');return r&&slug(r.closest('label').textContent)==='Nee';});
+var aand=Array.prototype.some.call(aandTd.querySelectorAll('input[type=checkbox]'),function(c){return c.checked;});
+if(nee||aand){var r=form.querySelectorAll('input[name="groep1"]')[1];if(r)r.checked=true;}
+}
+
+/* 6e. ONACCEPTABEL bij een 'Risico ná maatregelen' selecteert automatisch TOCHT ANNULEREN */
+function onacceptabel(){
+var o=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
+if(o){var r=form.querySelectorAll('input[name="besluit"]')[1];if(r)r.checked=true;}
+}
+
+/* 6f. Tijdschema: TOCHT ANNULEREN staat standaard aan en gaat uit zodra 'Passend bij tijdschema' is aangevinkt */
+var passend=form.querySelector('[data-passend]');
+function annuleerRadio(){return form.querySelectorAll('input[name="besluit"]')[1];}
+function motTekst(n){
+var tr=form.querySelector('input[name="'+n+'"]').closest('tr'),x=tr.nextElementSibling;
+while(x){var th=x.querySelector('th');if(th&&th.textContent.indexOf('Motivering / maatregelen')===0)return x.querySelector('textarea');x=x.nextElementSibling;}
+return null;
+}
+function zonderMot(n){
+var r=form.querySelectorAll('input[name="'+n+'"]')[1],ta=motTekst(n);
+return !!(r&&r.checked&&ta&&!ta.value.trim());
+}
+function zonderMotivering(){return ['weer1','water1','groep1'].some(zonderMot);}
+function motivatieRegel(){if(zonderMotivering())annuleerRadio().checked=true;}
+function geenGeul(){return !!form.querySelector('[data-geengeul]:checked');}
+function tijdschema(){
+var r=annuleerRadio();
+var onacc=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
+var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
+if((!passend.checked&&!geenGeul())||onacc||diep||zonderMotivering())r.checked=true;else if(r.checked)r.checked=false;
+}
+function startBesluit(){
+if(!form.querySelector('input[name="besluit"]:checked')&&!passend.checked&&!geenGeul())annuleerRadio().checked=true;
+}
+
+/* 7. Waarschuwing bij 'TOCHT UITVOEREN' met openstaande problemen */
+function gekozen(name){var r=form.querySelector('input[name="'+name+'"]:checked');return r?slug(r.closest('label').textContent):'';}
+function controleer(){
+var rs=document.getElementById('route');
+var ks=document.getElementById('knmi-soort'),kl=document.getElementById('knmi-link');
+var ku=ks.options[ks.selectedIndex]&&ks.options[ks.selectedIndex].getAttribute('data-url');
+kl.hidden=!ku;
+if(ku){kl.href=ku;kl.textContent='Meer informatie over '+ks.value+' op knmi.nl';}
+document.getElementById('route-anders').hidden=rs.value!=='Anders';
+var vh=document.getElementById('vergunninghouder');
+document.getElementById('vergunninghouder-anders').hidden=vh.value!=='Anders';
+var p=[];
+[['weer2','Weer'],['water2','Water- en routecondities'],['groep2','Groepsanalyse']].forEach(function(x){
+if(gekozen(x[0])==='ONACCEPTABEL')p.push(x[1]+': risico ná maatregelen is ONACCEPTABEL.');
+});
+for(var i=1;i<=4;i++){
+}
+[['weer1','Weer'],['water1','Water- en routecondities'],['groep1','Groepsanalyse']].forEach(function(x){
+if(zonderMot(x[0]))p.push(x[1]+': verhoogd risico zonder motivering / maatregelen.');
+});
+if(gekozen('comm')==='Niet in orde')p.push('Communicatiemiddelen zijn niet in orde.');
+if(gekozen('nood')==='Niet in orde')p.push('Noodmiddelen zijn niet in orde.');
+if(!passend.checked&&!geenGeul())p.push('Geulpassage: “Passend bij tijdschema” is niet aangevinkt.');
+if(gekozen('bron')==='Nee')p.push('Bronnen zijn niet geraadpleegd.');
+var tonen=gekozen('besluit')==='TOCHT UITVOEREN'&&p.length>0;
+waarschuwing.className=tonen?'zichtbaar':'';
+waarschuwing.innerHTML=tonen?'Let op: besluit is TOCHT UITVOEREN, maar er staan punten open:<ul>'+p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>':'';
+}
+
+var timer;
+function wijziging(e){
+if(e&&e.target&&e.target.tagName==='TEXTAREA')grow(e.target);
+if(e&&e.target&&(e.target.hasAttribute('data-koppel')||e.target.hasAttribute('data-diepte')))koppel();
+var t=e&&e.target;
+if(t&&t.id==='knmi-soort'&&t.value){var ja0=form.querySelectorAll('input[name="knmi"]')[1];if(ja0)ja0.checked=true;}
+if(t&&(t.name==='knmi'||t.id==='knmi-soort'||t.hasAttribute('data-koppel')||t.hasAttribute('data-doel')||t.id==='zicht'||t.id==='neerslag'))weerRisico();
+if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-diep-hoog')||t.name==='uitwijk'))waterRisico();
+if(t&&(t.name==='zwaarte'||t.name==='uitr'||(t.type==='checkbox'&&t.closest('td')===aandTd)))groepRisico();
+if(t&&(t.name==='weer2'||t.name==='water2'||t.name==='groep2'||t.name==='comm'||t.name==='nood'))onacceptabel();
+if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
+if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diep-hoog')||t.hasAttribute('data-diepte')))tijdschema();
+if(t&&t.tagName==='TEXTAREA'){
+var was=t.dataset.leeg==='1';t.dataset.leeg=t.value.trim()===''?'1':'0';
+if(was&&t.dataset.leeg==='0'){var s2=['weer1','water1','groep1'].filter(function(n){return motTekst(n)===t;})[0];if(s2&&form.querySelectorAll('input[name="'+s2+'"]')[1].checked)tijdschema();}
+}
+if(t&&t.name!=='besluit')motivatieRegel();
+controleer();
+clearTimeout(timer);timer=setTimeout(function(){save('Automatisch opgeslagen');},600);
+}
+form.addEventListener('input',wijziging);
+form.addEventListener('change',wijziging);
+startBesluit();
+koppelInit();
+function koppelInit(){controleer();}
+textareas.forEach(function(x){x.dataset.leeg=x.value.trim()===''?'1':'0';});
+growAll();
+window.addEventListener('beforeprint',growAll);
+window.addEventListener('resize',growAll);
+
+form.addEventListener('submit',function(e){e.preventDefault();save('Opgeslagen in deze browser');});
+
+document.getElementById('nieuw').addEventListener('click',function(){
+if(!window.confirm('Alle ingevulde gegevens wissen en een nieuw formulier starten?'))return;
+try{localStorage.removeItem(KEY);}catch(e){}
+form.reset();
+if(datum)datum.value=new Date().toLocaleDateString('sv-SE');
+textareas.forEach(function(x){x.dataset.leeg='1';});
+startBesluit();controleer();growAll();
+status.textContent='Nieuw formulier gestart.';
+window.scrollTo({top:0});
+});
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (err) {
+      console.warn('Offline ondersteuning kon niet worden gestart:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>

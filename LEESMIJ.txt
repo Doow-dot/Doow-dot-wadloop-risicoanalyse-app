@@ -1,0 +1,31 @@
+# Risicoanalyse Wadlooptocht – installeerbare webapp
+
+## Inhoud
+- `index.html`: het bestaande risicoanalyseformulier met PWA-ondersteuning
+- `manifest.webmanifest`: naam, weergave en app-iconen
+- `sw.js`: service worker voor het offline beschikbaar maken van de app-shell
+- `icons/`: app-iconen
+
+## Online zetten
+De app moet via HTTPS worden aangeboden (of lokaal via localhost) om installatie en offline caching te laten werken.
+
+Eenvoudige opties:
+1. Maak een account aan bij Netlify.
+2. Kies **Add new site** / **Deploy manually**.
+3. Sleep de volledige mapinhoud of de ZIP naar Netlify.
+4. Open de gegenereerde HTTPS-link op de telefoon.
+
+## Installeren
+- **Android / Chrome:** open de link en kies `Install app` of `Toevoegen aan startscherm`.
+- **iPhone / Safari:** open de link, tik op `Delen` en kies `Zet op beginscherm`.
+- **Computer:** gebruik het installatie-icoon in de adresbalk als de browser dat toont.
+
+## Offline en gegevens
+- Open de app eerst één keer met internet, zodat de app-shell in de cache kan worden opgeslagen.
+- Daarna kan het formulier offline worden geopend.
+- Ingevulde gegevens worden, net als in de oorspronkelijke versie, lokaal in de browser op dat apparaat opgeslagen.
+- Er is geen automatische synchronisatie tussen apparaten en geen centrale back-up.
+- KNMI- en Rijkswaterstaat-links en externe informatiebronnen vereisen internet.
+
+## Let op
+Dit pakket verandert de bestaande risico-inhoud en beslisregels van het formulier niet bewust. Test de app vóór gebruik in de praktijk, zowel online als offline, en controleer de bestaande risicologica en lokale opslag op de apparaten waarop gidsen ermee gaan werken.
