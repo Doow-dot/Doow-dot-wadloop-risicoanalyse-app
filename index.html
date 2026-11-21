@@ -40,6 +40,12 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 @media screen and (min-width:701px),print{.geul-lijst[data-soort=passage] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 140px}}
 .geul-keuze{display:flex;gap:10px;white-space:nowrap}
 .geul-label{font-weight:bold;white-space:nowrap}
+.geul-lijst[data-soort=reserve] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 140px minmax(190px,auto)}
+.reserve-uit{font-weight:bold}
+.reserve-ok{color:#1b6e2e}
+.reserve-nogo{color:#8a1111}
+#reserve-advies{margin-top:10px;font-weight:bold}
+#reserve-advies.nogo{color:#8a1111;border:2px solid #cc2b2b;background:#fff4f4;padding:8px 10px}
 .aandachtspunten{gap:8px 15px;margin-bottom:8px}
 .anders-rij{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .anders-rij label{white-space:nowrap}
@@ -50,6 +56,13 @@ button{background:var(--primary);color:#fff;border:none;padding:12px 20px;cursor
 button.secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
 .bewaar-info{font-size:.9rem;color:#444;margin:10px 0 0}
 #save-status{margin-top:10px;color:var(--primary)}
+#ai-blok{margin-top:15px}
+#ai-uitkomst{white-space:pre-wrap;background:var(--light);border:1px solid var(--border);border-left:4px solid var(--primary);padding:12px;margin-top:10px;border-radius:6px}
+#ai-stop{margin-top:10px}
+#rws-uitkomst{margin-top:8px}
+#rws-uitkomst.fout{color:#8a1111;font-weight:bold}
+.rws-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.rws-chips button{margin:0;padding:8px 12px;font-size:.95rem}
 
 @media screen and (max-width:700px){
 body{padding:0;font-size:16px}
@@ -84,16 +97,12 @@ form label input[type=checkbox],form label input[type=radio]{width:20px;height:2
 button{width:100%;margin:0;min-height:48px;border-radius:8px}
 }
 @media print{
-button,.bewaar-info,#save-status{display:none!important}
+button,.bewaar-info,#save-status,#ai-blok{display:none!important}
 body{background:#fff;padding:0}
 .container{box-shadow:none;padding:0}
 textarea{resize:none}
 }
 </style>
-
-<meta name="theme-color" content="#14415A">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 
 <body>
@@ -332,6 +341,21 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 
 <table>
 <tr>
+<th scope="row">Meetstation en gegevens inladen</th>
+<td>
+<select id="rws-station" aria-label="Meetstation voor automatisch inladen">
+<option value="">Kies meetstation…</option>
+<option value="lauwersoog">Lauwersoog</option>
+<option value="nes">Nes (Ameland)</option>
+<option value="harlingen">Harlingen</option>
+<option value="eemshaven">Eemshaven</option>
+</select>
+<div class="opties" style="margin-top:8px"><button type="button" class="secondary" id="rws-laad">Laagwater inladen</button></div>
+<div id="rws-uitkomst" aria-live="polite"></div>
+<div id="rws-keuzes" class="rws-chips"></div>
+</td>
+</tr>
+<tr>
 <th scope="row">Voorspelde laagwaterstand</th>
 <td>
 <label class="veld">cm NAP <input type="number"></label>
@@ -486,18 +510,36 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <div class="geul-lijst" data-soort="passage">
 <div class="geul-rij"><span class="geul-label">Geul 1</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam (geulpassage)">
-<input type="time" aria-label="Geul 1 uiterste tijd geulpassage"></div>
+<input type="time" data-tijd="uiterste" aria-label="Geul 1 uiterste tijd geulpassage"></div>
 <div class="geul-rij"><span class="geul-label">Geul 2</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam (geulpassage)">
-<input type="time" aria-label="Geul 2 uiterste tijd geulpassage"></div>
+<input type="time" data-tijd="uiterste" aria-label="Geul 2 uiterste tijd geulpassage"></div>
 <div class="geul-rij"><span class="geul-label">Geul 3</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam (geulpassage)">
-<input type="time" aria-label="Geul 3 uiterste tijd geulpassage"></div>
+<input type="time" data-tijd="uiterste" aria-label="Geul 3 uiterste tijd geulpassage"></div>
 <div class="geul-rij"><span class="geul-label">Geul 4</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam (geulpassage)">
-<input type="time" aria-label="Geul 4 uiterste tijd geulpassage"></div>
+<input type="time" data-tijd="uiterste" aria-label="Geul 4 uiterste tijd geulpassage"></div>
 </div>
 <div style="margin-top:10px"><label><input type="checkbox" data-passend> Passend bij tijdschema</label></div>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Geulpassage tijd(en) en reservetijd</th>
+<td>
+<p style="margin:0 0 10px">Vul per geul de verwachte passagetijd in. Reservetijd = uiterste tijd geulpassage min verwachte passagetijd. Bij minder dan 30 minuten (of een negatieve reservetijd) is het advies NO-GO.</p>
+<div class="geul-lijst" data-soort="reserve">
+<div class="geul-rij"><span class="geul-label">Geul 1</span><span class="geul-naam"></span>
+<input type="time" data-tijd="plan" aria-label="Geul 1 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 2</span><span class="geul-naam"></span>
+<input type="time" data-tijd="plan" aria-label="Geul 2 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 3</span><span class="geul-naam"></span>
+<input type="time" data-tijd="plan" aria-label="Geul 3 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
+<div class="geul-rij"><span class="geul-label">Geul 4</span><span class="geul-naam"></span>
+<input type="time" data-tijd="plan" aria-label="Geul 4 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
+</div>
+<div id="reserve-advies" role="status" hidden></div>
 </td>
 </tr>
 
@@ -632,10 +674,17 @@ Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incide
 <button type="button" onclick="window.print()">Opslaan als PDF / Afdrukken</button>
 <button type="submit">Opslaan</button>
 <button type="button" class="secondary" id="nieuw">Nieuw formulier</button>
+<button type="button" class="secondary" id="ai-controleer" hidden>Controleer met AI</button>
+</div>
+
+<div id="ai-blok" hidden>
+<p class="bewaar-info">“Controleer met AI” stuurt de ingevulde gegevens naar Claude voor een tweede paar ogen. Het gebruikt je eigen Claude-tegoed en vraagt de eerste keer om toestemming. Het advies is een hulpmiddel: het besluit en de verantwoordelijkheid blijven bij de vergunninghouder of verantwoordelijke gids.</p>
+<div id="ai-uitkomst" role="status" aria-live="polite" hidden></div>
+<button type="button" class="secondary" id="ai-stop" hidden>Stop</button>
 </div>
 
 <p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
-<p class="bewaar-info">Versie: 19-11-2026, 4</p>
+<p class="bewaar-info">Versie: 21-11-2026, 8</p>
 <div id="save-status" role="status" aria-live="polite"></div>
 
 </form>
@@ -778,14 +827,45 @@ return !!(r&&r.checked&&ta&&!ta.value.trim());
 function zonderMotivering(){return ['weer1','water1','groep1'].some(zonderMot);}
 function motivatieRegel(){if(zonderMotivering())annuleerRadio().checked=true;}
 function geenGeul(){return !!form.querySelector('[data-geengeul]:checked');}
+
+/* 6g. Reservetijd per geul = uiterste tijd geulpassage min verwachte passagetijd; onder 30 min (of negatief) = NO-GO */
+var RESERVE_MIN=30;
+function naarMin(v){var m=/^(\d{1,2}):(\d{2})/.exec(v||'');return m?parseInt(m[1],10)*60+parseInt(m[2],10):null;}
+function geulReserve(){
+var uit=form.querySelectorAll('.geul-lijst[data-soort="passage"] .geul-rij');
+var plan=form.querySelectorAll('.geul-lijst[data-soort="reserve"] .geul-rij');
+var advies=document.getElementById('reserve-advies');
+var nogo=[],berekend=0,geen=geenGeul();
+Array.prototype.forEach.call(plan,function(rij,i){
+var u=uit[i],naam=u?slug(u.querySelector('input[type=text]').value):'';
+rij.querySelector('.geul-naam').textContent=naam;
+var out=rij.querySelector('.reserve-uit');
+var a=u?naarMin(u.querySelector('input[type=time]').value):null,b=naarMin(rij.querySelector('input[type=time]').value);
+if(geen||a===null||b===null){out.textContent='';out.className='reserve-uit';return;}
+var d=a-b;if(d>720)d-=1440;if(d<-720)d+=1440;
+berekend++;
+if(d<RESERVE_MIN){
+nogo.push(rij.querySelector('.geul-label').textContent+(naam?' ('+naam+')':''));
+out.textContent='Reservetijd: '+d+' min – NO-GO'+(d<0?' (na uiterste tijd)':' (minder dan '+RESERVE_MIN+' min)');
+out.className='reserve-uit reserve-nogo';
+}else{
+out.textContent='Reservetijd: '+d+' min – voldoende';
+out.className='reserve-uit reserve-ok';
+}
+});
+if(nogo.length){advies.hidden=false;advies.className='nogo';advies.textContent='NO-GO: reservetijd is minder dan '+RESERVE_MIN+' minuten bij '+nogo.join(', ')+'.';}
+else if(berekend){advies.hidden=false;advies.className='';advies.textContent='Reservetijd is bij alle ingevulde geulen voldoende (minimaal '+RESERVE_MIN+' min).';}
+else{advies.hidden=true;advies.className='';advies.textContent='';}
+return nogo;
+}
 function tijdschema(){
 var r=annuleerRadio();
 var onacc=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
 var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
-if((!passend.checked&&!geenGeul())||onacc||diep||zonderMotivering())r.checked=true;else if(r.checked)r.checked=false;
+if((!passend.checked&&!geenGeul())||onacc||diep||zonderMotivering()||geulReserve().length)r.checked=true;else if(r.checked)r.checked=false;
 }
 function startBesluit(){
-if(!form.querySelector('input[name="besluit"]:checked')&&!passend.checked&&!geenGeul())annuleerRadio().checked=true;
+if(!form.querySelector('input[name="besluit"]:checked')&&((!passend.checked&&!geenGeul())||geulReserve().length))annuleerRadio().checked=true;
 }
 
 /* 7. Waarschuwing bij 'TOCHT UITVOEREN' met openstaande problemen */
@@ -811,6 +891,7 @@ if(zonderMot(x[0]))p.push(x[1]+': verhoogd risico zonder motivering / maatregele
 if(gekozen('comm')==='Niet in orde')p.push('Communicatiemiddelen zijn niet in orde.');
 if(gekozen('nood')==='Niet in orde')p.push('Noodmiddelen zijn niet in orde.');
 if(!passend.checked&&!geenGeul())p.push('Geulpassage: “Passend bij tijdschema” is niet aangevinkt.');
+if(geulReserve().length)p.push('Geulpassage: reservetijd is minder dan '+RESERVE_MIN+' minuten (NO-GO).');
 if(gekozen('bron')==='Nee')p.push('Bronnen zijn niet geraadpleegd.');
 var tonen=gekozen('besluit')==='TOCHT UITVOEREN'&&p.length>0;
 waarschuwing.className=tonen?'zichtbaar':'';
@@ -828,7 +909,7 @@ if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-diep-hoog')||t.name==
 if(t&&(t.name==='zwaarte'||t.name==='uitr'||(t.type==='checkbox'&&t.closest('td')===aandTd)))groepRisico();
 if(t&&(t.name==='weer2'||t.name==='water2'||t.name==='groep2'||t.name==='comm'||t.name==='nood'))onacceptabel();
 if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
-if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diep-hoog')||t.hasAttribute('data-diepte')))tijdschema();
+if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diep-hoog')||t.hasAttribute('data-diepte')||t.hasAttribute('data-tijd')))tijdschema();
 if(t&&t.tagName==='TEXTAREA'){
 var was=t.dataset.leeg==='1';t.dataset.leeg=t.value.trim()===''?'1':'0';
 if(was&&t.dataset.leeg==='0'){var s2=['weer1','water1','groep1'].filter(function(n){return motTekst(n)===t;})[0];if(s2&&form.querySelectorAll('input[name="'+s2+'"]')[1].checked)tijdschema();}
@@ -839,6 +920,25 @@ clearTimeout(timer);timer=setTimeout(function(){save('Automatisch opgeslagen');}
 }
 form.addEventListener('input',wijziging);
 form.addEventListener('change',wijziging);
+
+/* 8. Eenmalige voorinvulling (momentopname verwachting zondag 22-11-2026, Ameland; bronnen: KNMI, Buienradar, Yr, getijtabel Nes). Controleer vooraf KNMI-waarschuwingen en waterinfo.rws.nl. */
+(function(){
+var VKEY=KEY+'-voorinvulling-2026-11-22';
+try{if(hersteld||localStorage.getItem(VKEY))return;}catch(e){if(hersteld)return;}
+function zet(el,v,ev){if(!el)return;el.value=v;el.dispatchEvent(new Event(ev||'input',{bubbles:true}));}
+var tr=Array.prototype.filter.call(form.querySelectorAll('tr'),function(r){var th=r.querySelector('th');return th&&th.textContent.indexOf('Voorspelde laagwaterstand')===0;})[0];
+var lw=tr?tr.querySelectorAll('input'):[];
+zet(form.querySelector('input[type=date]:not([data-vandaag])'),'2026-11-22');
+zet(document.getElementById('route'),'Oversteek Ameland','change');
+zet(form.querySelector('select[aria-label="Windrichting"]'),'NO','change');
+zet(form.querySelector('input[data-koppel="bft"]'),'3');
+zet(form.querySelector('input[data-koppel="temp"]'),'8');
+zet(form.querySelector('input[data-koppel="water"]'),'8.9');
+zet(document.getElementById('neerslag'),'droog','change');
+if(lw.length>=3){zet(lw[0],'-102');zet(lw[1],'Ameland, Nes');zet(lw[2],'13:57');}
+try{localStorage.setItem(VKEY,'1');}catch(e){}
+status.textContent='Voorbeeldwaarden ingevuld (verwachting zondag 22 november, Ameland). Controleer ze vóór gebruik.';
+})();
 startBesluit();
 koppelInit();
 function koppelInit(){controleer();}
@@ -846,6 +946,142 @@ textareas.forEach(function(x){x.dataset.leeg=x.value.trim()===''?'1':'0';});
 growAll();
 window.addEventListener('beforeprint',growAll);
 window.addEventListener('resize',growAll);
+
+
+/* 8b. Water: laagwater automatisch inladen via eigen proxy (verwachting Rijkswaterstaat) */
+(function(){
+var PROXY='https://wadloop-proxy.svenvij.workers.dev/water?station=';
+var NAMEN={lauwersoog:'Lauwersoog',nes:'Nes (Ameland)',harlingen:'Harlingen',eemshaven:'Eemshaven'};
+var RWSOS_EMSH='https://rwsos.rws.nl/viewer/embed/chart/waddenzee/waterkwantiteit/location/EMSH?pd=-2;10&timeslider&theme=light&components=waterlevel';
+var sel=document.getElementById('rws-station'),knop=document.getElementById('rws-laad'),uit=document.getElementById('rws-uitkomst'),keuzes=document.getElementById('rws-keuzes');
+if(!sel||!knop||!uit||!keuzes)return;
+var tr=Array.prototype.filter.call(form.querySelectorAll('tr'),function(r){var th=r.querySelector('th');return th&&th.textContent.indexOf('Voorspelde laagwaterstand')===0;})[0];
+var lw=tr?tr.querySelectorAll('input'):[];
+var dat=form.querySelector('input[type=date]:not([data-vandaag])');
+var teller=0;
+function zet(el,v){if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));}
+function melding(t,fout){uit.className=fout?'fout':'';uit.textContent=t;}
+function isoDatum(d){return d.split('-').reverse().join('-');}
+function hhmm(d){return d.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});}
+function vul(st,l){zet(lw[0],String(l.cmNAP));zet(lw[1],NAMEN[st]);zet(lw[2],l.tijd);}
+function mislukt(st,reden){
+keuzes.innerHTML='';
+uit.className='fout';
+uit.textContent='';
+if(st==='eemshaven'){
+uit.appendChild(document.createTextNode('Voor Eemshaven is nog geen automatische verwachting beschikbaar. Vul cm NAP en tijd handmatig in vanuit de '));
+var a=document.createElement('a');a.href=RWSOS_EMSH;a.target='_blank';a.rel='noopener';a.textContent='RWsOS-grafiek Eemshaven';
+uit.appendChild(a);uit.appendChild(document.createTextNode('.'));
+}else{
+uit.textContent='Automatisch inladen is niet gelukt voor '+NAMEN[st]+'. Vul cm NAP en tijd handmatig in via waterinfo.rws.nl.';
+if(reden){var k=document.createElement('div');k.style.fontWeight='normal';k.style.fontSize='.9rem';k.textContent='Technische reden: '+reden+' (pagina-adres: '+location.origin+')';uit.appendChild(k);}
+}
+}
+function verwerk(st,d){
+keuzes.innerHTML='';
+zet(lw[1],NAMEN[st]);
+if(!d||!d.beschikbaar||!d.laagwaters||!d.laagwaters.length){mislukt(st,(d&&(d.fout||d.opmerking))||'antwoord bevat geen laagwaters');return;}
+var info=' Verwachting Rijkswaterstaat inclusief opzet en afzwaaiing, ruw en niet gevalideerd; opgehaald om '+hhmm(new Date(d.opgehaald))+'. Controleer op waterinfo.rws.nl.';
+var gewenst=dat&&dat.value?dat.value:'';
+var kand=d.laagwaters.filter(function(l){return !gewenst||isoDatum(l.datum)===gewenst;});
+if(gewenst&&!kand.length){
+var tot=d.verwachtingTot?new Date(d.verwachtingTot):null;
+melding('Geen laagwater op de gekozen datum in de beschikbare verwachting'+(tot?' (die loopt tot '+tot.toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit'})+' '+hhmm(tot)+')':'')+'. Vul handmatig in via waterinfo.rws.nl.',true);
+return;
+}
+if(kand.length===1){
+vul(st,kand[0]);
+melding('Ingevuld: laagwater '+kand[0].datum+' '+kand[0].tijd+', '+kand[0].cmNAP+' cm NAP.'+info,false);
+return;
+}
+melding('Kies het laagwater dat bij je tocht hoort.'+info,false);
+kand.forEach(function(l){
+var b=document.createElement('button');b.type='button';b.className='secondary';
+b.textContent=l.datum.slice(0,5)+' '+l.tijd+' · '+l.cmNAP+' cm NAP';
+b.addEventListener('click',function(){vul(st,l);melding('Ingevuld: laagwater '+l.datum+' '+l.tijd+', '+l.cmNAP+' cm NAP.'+info,false);keuzes.innerHTML='';});
+keuzes.appendChild(b);
+});
+}
+function laad(){
+var st=sel.value;
+if(!st){melding('Kies eerst een meetstation.',true);return;}
+var nr=++teller;
+keuzes.innerHTML='';
+melding('Gegevens ophalen…',false);
+var ctl=('AbortController' in window)?new AbortController():null;
+var timer=setTimeout(function(){if(ctl)ctl.abort();},12000);
+fetch(PROXY+encodeURIComponent(st),ctl?{signal:ctl.signal}:{})
+.then(function(r){if(!r.ok)throw new Error('status '+r.status);return r.json();})
+.then(function(d){clearTimeout(timer);if(nr===teller)verwerk(st,d);})
+.catch(function(e){clearTimeout(timer);if(nr===teller)mislukt(st,String((e&&e.message)||e));});
+}
+sel.addEventListener('change',function(){if(sel.value)laad();else{keuzes.innerHTML='';melding('',false);}});
+knop.addEventListener('click',laad);
+})();
+
+/* 9. AI-controle: Claude leest het ingevulde formulier als tweede paar ogen */
+(function(){
+var knop=document.getElementById('ai-controleer'),blok=document.getElementById('ai-blok'),uit=document.getElementById('ai-uitkomst'),stop=document.getElementById('ai-stop');
+var sample=null,ctl=null;
+if(!knop||!window.claude||!window.claude.use)return;
+window.claude.use('sample').then(function(s){if(s){sample=s;knop.hidden=false;blok.hidden=false;}}).catch(function(){});
+
+function lbl(el){var l=el.closest('label');if(l)return slug(l.textContent);return el.getAttribute('aria-label')||el.getAttribute('placeholder')||'';}
+function formulierTekst(){
+var out=[];
+Array.prototype.forEach.call(form.querySelectorAll('h2,tr'),function(n){
+if(n.tagName==='H2'){out.push('\n## '+slug(n.textContent));return;}
+var th=n.querySelector('th'),td=n.querySelector('td');
+if(!th||!td)return;
+var w=[],rc=false,radios=td.querySelectorAll('input[type=radio]');
+Array.prototype.forEach.call(td.querySelectorAll('input,select,textarea'),function(el){
+if(el.type==='radio'||el.type==='checkbox'){
+if(el.checked){w.push(slug(el.closest('label').textContent));if(el.type==='radio')rc=true;}
+return;
+}
+if(el.hidden)return;
+var v=el.tagName==='SELECT'?(el.value?el.options[el.selectedIndex].text:''):el.value;
+if(slug(v)!=='')w.push((lbl(el)?lbl(el)+': ':'')+slug(v));
+});
+if(radios.length&&!rc)w.push('(geen keuze gemaakt)');
+out.push('- '+slug(th.textContent)+': '+(w.length?w.join(' | '):'(leeg)'));
+});
+return out.join('\n');
+}
+
+var REGELS=[
+'Je bent een tweede paar ogen bij een Nederlandse risicoanalyse voor een wadlooptocht (praktisch beslisformulier met onderdelen Tochtgegevens, Weer, Water- en routecondities, Groepsanalyse, Veiligheidsmarges, Beheersmaatregelen, Go/No-go besluit en Evaluatie).',
+'Hieronder staat het formulier zoals het nu is ingevuld. Elke regel is een veld met zijn waarde; "(leeg)" of "(geen keuze gemaakt)" betekent dat het nog niet is ingevuld.',
+'Je taak: signaleer wat een gids moet nalopen voordat hij vertrekt.',
+'Let op: 1) belangrijke ontbrekende gegevens; 2) tegenstrijdigheden, bijvoorbeeld een geulpassage of uiterste tijd die niet past bij laagwater, vertrek- en eindtijd of tijdschema; een verhoogd risico zonder motivering of maatregelen; een besluit dat niet past bij de ingevulde risico\'s of bij onvoldoende communicatie- of noodmiddelen; 3) waarden die onwaarschijnlijk of verkeerd ingevuld lijken.',
+'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Per geul geldt: reservetijd = uiterste tijd geulpassage min verwachte passagetijd; minder dan 30 minuten (of negatief) is een NO-GO.',
+'Regels: gebruik alleen wat in het formulier staat. Verzin geen weersverwachting, getijdetijden of feiten en zeg niet dat gegevens kloppen met officiële bronnen. Neem zelf geen go/no-go besluit en zeg niet dat de tocht veilig is. Als het formulier nog halverwege is ingevuld, noem dan alleen de belangrijkste ontbrekende punten.',
+'Uitvoer: Nederlands, platte tekst zonder opmaaktekens als sterretjes of hekjes. Gebruik maximaal drie kopjes in hoofdletters (ONTBREEKT, TEGENSTRIJDIG OF OPVALLEND, GEEN OPMERKINGEN) en korte regels die beginnen met "- ". Maximaal 12 regels in totaal. Sluit af met één zin dat de verantwoordelijkheid bij de vergunninghouder of verantwoordelijke gids blijft.'
+].join('\n');
+
+function melding(code){
+if(code==='not_granted')return 'Geen toestemming gegeven om Claude te gebruiken. Je kunt het formulier gewoon verder zelf invullen.';
+if(code==='rate_limited')return 'Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.';
+return 'De controle is niet gelukt. Probeer het later opnieuw; het formulier zelf werkt gewoon door.';
+}
+
+knop.addEventListener('click',function(){
+if(!sample)return;
+var ingevuld=formulierTekst();
+ctl=new AbortController();
+knop.disabled=true;stop.hidden=false;uit.hidden=false;uit.textContent='Bezig met controleren…';
+sample(REGELS+'\n\n--- FORMULIER ---\n'+ingevuld,{
+signal:ctl.signal,cache:false,
+onText:function(t){uit.textContent=t.text;}
+}).then(function(r){
+uit.textContent=r.text+(r.truncated?'\n\n(Antwoord is afgekapt.)':'');
+}).catch(function(e){
+if(e&&e.code==='cancelled'){uit.textContent=(e.text||'')+'\n\n(Gestopt.)';}
+else uit.textContent=(e&&e.text?e.text+'\n\n':'')+melding(e&&e.code);
+}).then(function(){knop.disabled=false;stop.hidden=true;ctl=null;});
+});
+stop.addEventListener('click',function(){if(ctl)ctl.abort();});
+})();
 
 form.addEventListener('submit',function(e){e.preventDefault();save('Opgeslagen in deze browser');});
 
@@ -860,16 +1096,6 @@ status.textContent='Nieuw formulier gestart.';
 window.scrollTo({top:0});
 });
 })();
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function (err) {
-      console.warn('Offline ondersteuning kon niet worden gestart:', err);
-    });
-  });
-}
 </script>
 </body>
 </html>
