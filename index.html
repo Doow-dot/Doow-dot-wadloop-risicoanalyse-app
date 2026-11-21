@@ -1,1101 +1,335 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta property="og:image" content="https://website-b1a034.netlify.app/.netlify/og-image/20b824d0c49b0e29ea65693a8bc7ed54.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<title>Risicoanalyse Wadlooptocht</title>
-<style>
-:root{--primary:#14415A;--light:#f5f8fa;--border:#d7dfe5}
-*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:20px;background:#f4f6f8;color:#222;line-height:1.4;accent-color:var(--primary)}
-.container{max-width:1200px;margin:auto;background:#fff;padding:30px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
-h1{color:var(--primary);margin-bottom:0}
-h2{background:var(--primary);color:#fff;padding:10px 15px;margin-top:35px;break-after:avoid}
-.notice{background:#fff6d8;border-left:5px solid #d1a300;padding:10px;margin:20px 0}
-.instructions{background:#eef5fa;padding:12px;border-left:4px solid var(--primary);margin:15px 0;font-style:italic}
-table{width:100%;border-collapse:collapse;margin-bottom:15px}
-th,td{border:1px solid var(--border);padding:10px;vertical-align:top}
-th{width:35%;background:#f6f8fa;text-align:left}
-tr{break-inside:avoid}
-input[type=text],input[type=number],input[type=time],input[type=date],textarea,select{width:100%;padding:8px;box-sizing:border-box}
-textarea{min-height:90px;resize:vertical;overflow:hidden}
-:focus-visible{outline:3px solid #2a7fb0;outline-offset:2px}
-.inline{display:flex;flex-wrap:wrap;gap:15px}
-.inline label{white-space:nowrap}
-.stack{display:flex;flex-direction:column;gap:6px}
-.veld{display:flex;align-items:center;gap:8px;margin:0 0 8px}
-.veld input{flex:1 1 120px;min-width:0}
-.veld:last-child{margin-bottom:0}
-.opties{display:flex;flex-wrap:wrap;gap:6px 15px;align-items:center}
-.opties input[type=text]{flex:1 1 180px;width:auto}
-.go-nogo{background:#fff4f4;border:2px solid #cc2b2b;padding:15px;break-inside:avoid}
-#waarschuwing{display:none;background:#fff;border:3px solid #cc2b2b;color:#8a1111;padding:10px 15px;margin:15px 0;font-weight:bold}
-#waarschuwing.zichtbaar{display:block}
-#waarschuwing ul{margin:6px 0 0;padding-left:20px;font-weight:normal}
-.geul-rij{display:grid;grid-template-columns:auto minmax(120px,1fr) 110px 24px auto;gap:8px;align-items:center;margin-bottom:6px}
-.geul-rij:last-child{margin-bottom:0}
-@media screen and (min-width:701px),print{.geul-lijst[data-soort=passage] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 140px}}
-.geul-keuze{display:flex;gap:10px;white-space:nowrap}
-.geul-label{font-weight:bold;white-space:nowrap}
-.geul-lijst[data-soort=reserve] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 140px minmax(190px,auto)}
-.reserve-uit{font-weight:bold}
-.reserve-ok{color:#1b6e2e}
-.reserve-nogo{color:#8a1111}
-#reserve-advies{margin-top:10px;font-weight:bold}
-#reserve-advies.nogo{color:#8a1111;border:2px solid #cc2b2b;background:#fff4f4;padding:8px 10px}
-.aandachtspunten{gap:8px 15px;margin-bottom:8px}
-.anders-rij{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.anders-rij label{white-space:nowrap}
-.footer-text{font-style:italic;color:#444;margin-top:8px}
-.buttons{margin-top:30px}
-[hidden]{display:none!important}
-button{background:var(--primary);color:#fff;border:none;padding:12px 20px;cursor:pointer;margin-right:10px;font-size:1rem}
-button.secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
-.bewaar-info{font-size:.9rem;color:#444;margin:10px 0 0}
-#save-status{margin-top:10px;color:var(--primary)}
-#ai-blok{margin-top:15px}
-#ai-uitkomst{white-space:pre-wrap;background:var(--light);border:1px solid var(--border);border-left:4px solid var(--primary);padding:12px;margin-top:10px;border-radius:6px}
-#ai-stop{margin-top:10px}
-#rws-uitkomst{margin-top:8px}
-#rws-uitkomst.fout{color:#8a1111;font-weight:bold}
-.rws-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.rws-chips button{margin:0;padding:8px 12px;font-size:.95rem}
-
-@media screen and (max-width:700px){
-body{padding:0;font-size:16px}
-.container{padding:16px 14px 24px;box-shadow:none}
-h1{font-size:1.6rem}
-h3{margin:4px 0 0;font-size:1rem;color:#4a5a66}
-h2{font-size:1.05rem;margin:28px -14px 12px;padding:10px 14px}
-table,tbody,tr,th,td{display:block;width:auto}
-table{margin-bottom:12px}
-tr{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
-th,td{border:none}
-th{padding:10px 12px;font-size:.95rem;border-bottom:1px solid var(--border)}
-td{padding:12px}
-input[type=text],input[type=number],input[type=time],input[type=date],textarea,select{font-size:16px;min-height:44px;min-width:0;max-width:100%;margin:4px 0;border:1px solid #b9c6cf;border-radius:6px;background:#fff}
-textarea{min-height:100px}
-form label:has(input[type=checkbox]),form label:has(input[type=radio]){display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;margin:3px 0;border:1px solid var(--border);border-radius:22px;background:#fff;box-sizing:border-box;white-space:normal}
-form label:has(input:checked){border-color:var(--primary);background:#e6eef3}
-form label input[type=checkbox],form label input[type=radio]{width:20px;height:20px;margin:0;flex:none}
-.inline{gap:6px}
-.inline label{white-space:normal}
-.veld{flex-wrap:wrap}
-.anders-rij{flex-wrap:wrap;gap:4px 8px}
-.anders-rij input[type=text]{flex:1 1 160px}
-.geul-rij{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:var(--light);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px}
-.geul-rij>*{flex:1 1 100%;min-width:0;max-width:100%}
-.geul-rij input[type=number]{flex:1 1 0;width:auto}
-.geul-rij input[type=number]+span{flex:0 0 auto}
-.geul-rij span:empty{display:none}
-.geul-keuze{gap:6px;white-space:normal}
-.geul-keuze label{flex:1;justify-content:center}
-.buttons{display:flex;flex-direction:column;gap:10px}
-button{width:100%;margin:0;min-height:48px;border-radius:8px}
-}
-@media print{
-button,.bewaar-info,#save-status,#ai-blok{display:none!important}
-body{background:#fff;padding:0}
-.container{box-shadow:none;padding:0}
-textarea{resize:none}
-}
-</style>
-</head>
-
-<body>
-<main class="container">
-
-<h1>RISICOANALYSE</h1>
-<h3>WADLOOPTOCHT | Praktisch beslisformulier</h3>
-
-<div class="notice">
-VERPLICHT DOCUMENT • Volledig ingevuld aanwezig tijdens de wadlooptocht conform de vergunningsvoorschriften behorende bij de Wadloopverordening 2023.
-</div>
-
-<form novalidate>
-
-<h2>0 | TOCHTGEGEVENS</h2>
-
-<table>
-<tr>
-<th scope="row">Vergunninghouder</th>
-<td class="stack">
-<select id="vergunninghouder">
-<option value="">Kies een vergunninghouder…</option>
-<option>Wadloopcentrum Fryslân</option>
-<option>Wadloopcentrum Pieterburen</option>
-<option>Dijkstra Wadlooptochten</option>
-<option>Wadloopvereniging Arenicola</option>
-<option>Fryske Waedrinners</option>
-<option>Vrije Wadlopers</option>
-<option>Anders</option>
-</select>
-<input type="text" id="vergunninghouder-anders" aria-label="Vergunninghouder, anders namelijk" placeholder="Namelijk..." hidden>
-</td>
-</tr>
-<tr>
-<th scope="row">Datum</th>
-<td><input type="date"></td>
-</tr>
-<tr>
-<th scope="row">Route</th>
-<td class="stack">
-<select id="route">
-<option value="">Kies een route…</option>
-<option>Oversteek Ameland</option>
-<option>Oversteek Schiermonnikoog</option>
-<option>Brakzand-Schiermonnikoog</option>
-<option>Oversteek Engelsmanplaat/Rif</option>
-<option>Zwerftocht Pieterburen</option>
-<option>Zwerftocht Engelsmanplaat/Rif</option>
-<option>Oversteek Terschelling</option>
-<option>Oversteek Rottum</option>
-<option>Anders</option>
-</select>
-<input type="text" id="route-anders" aria-label="Route, anders namelijk" placeholder="Namelijk..." hidden>
-</td>
-</tr>
-<tr>
-<th scope="row">Geplande vertrektijd / eindtijd</th>
-<td>
-<div class="inline">
-<input type="time" aria-label="Geplande vertrektijd">
-<input type="time" aria-label="Geplande eindtijd">
-</div>
-</td>
-</tr>
-<tr>
-<th scope="row">Aantal gidsen / begeleiders</th>
-<td>
-<p>(n.v.t. solo-lopers)</p>
-<label class="veld">Gidsen <input type="number" min="0"></label>
-<label class="veld">Begeleiders <input type="number" min="0"></label>
-</td>
-</tr>
-<tr>
-<th scope="row">Aantal deelnemers</th>
-<td>
-<input type="number" min="0">
-<small>(n.v.t. solo-lopers)</small>
-</td>
-</tr>
-</table>
-
-<h2>WERKWIJZE</h2>
-
-<div class="instructions">
-Vul de kerngegevens in, omcirkel of vink relevante aandachtspunten aan en beoordeel per onderdeel het risico. Noteer alleen bij een verhoogd risico de motivering en maatregelen. Beoordeel daarna opnieuw of het restrisico aanvaardbaar is. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
-</div>
-
-<h2>1 | WEER</h2>
-
-<table>
-
-<tr>
-<th scope="row">KNMI-waarschuwing op route</th>
-<td>
-<div class="opties">
-<label><input type="radio" name="knmi"> Nee</label>
-<label><input type="radio" name="knmi"> Ja</label>
-</div>
-<div class="stack" style="margin-top:10px">
-<select id="knmi-soort" aria-label="Soort KNMI-waarschuwing">
-<option value="">Kies een waarschuwing…</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hitte">Hitte</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/kou">Kou</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zicht">Mist</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/onweersbuien">Onweersbuien</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/sneeuw-en-gladheid">Sneeuw</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hozen">Waterhozen</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/windstoten">Windstoten</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zware-regen">Zware regen</option>
-</select>
-<a id="knmi-link" href="#" target="_blank" rel="noopener" style="color:var(--primary)" hidden></a>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Windrichting / windkracht</th>
-<td>
-<select aria-label="Windrichting">
-<option value="">Kies windrichting…</option>
-<option>N</option>
-<option>NO</option>
-<option>O</option>
-<option>ZO</option>
-<option>Z</option>
-<option>ZW</option>
-<option>W</option>
-<option>NW</option>
-</select>
-<div class="opties" style="margin-top:10px">
-<input type="number" min="0" max="12" placeholder="Bft" data-koppel="bft" style="max-width:140px">
-<label><input type="checkbox" data-doel="bft-hoog"> &gt;5 Bft</label>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Temperatuur / gevoelstemperatuur</th>
-<td>
-<div class="inline">
-<input type="number" placeholder="Temperatuur °C" data-koppel="temp">
-<input type="number" placeholder="Gevoelstemperatuur °C" data-koppel="temp">
-</div>
-<div class="opties" style="margin-top:10px">
-<label><input type="checkbox" data-doel="temp-laag"> &lt;10 °C</label>
-<label><input type="checkbox" data-doel="temp-hoog"> &gt;25 °C</label>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Watertemperatuur</th>
-<td>
-<div class="opties">
-<input type="number" placeholder="°C" data-koppel="water" style="max-width:140px">
-<label><input type="checkbox" data-doel="water-laag"> &lt;10 °C</label>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Zicht</th>
-<td>
-<select id="zicht">
-<option value="">Kies zicht…</option>
-<option>goed</option>
-<option>beperkt</option>
-<option>slecht</option>
-<option>volledig zon onder</option>
-<option>gedeeld zon op/onder</option>
-</select>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Neerslag</th>
-<td>
-<select id="neerslag">
-<option value="">Kies neerslag…</option>
-<option>droog</option>
-<option>mist</option>
-<option>regen</option>
-<option>sneeuw</option>
-<option>ijs</option>
-</select>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Bijzonderheden</th>
-<td>
-<div class="opties">
-<label><input type="radio" name="bijz"> Nee</label>
-<label><input type="radio" name="bijz"> Ja</label>
-<input type="text" aria-label="Toelichting bijzonderheden">
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Verwachte verandering tijdens tocht</th>
-<td>
-<input type="text" placeholder="geen, windtoename, front, buien, afkoeling, anders">
-</td>
-</tr>
-
-<tr>
-<th scope="row">Risico vóór maatregelen</th>
-<td class="opties">
-<label><input type="radio" name="weer1"> LAAG</label>
-<label><input type="radio" name="weer1"> VERHOOGD</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Motivering / maatregelen bij verhoogd risico</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Risico ná maatregelen</th>
-<td class="stack">
-<label><input type="radio" name="weer2"> LAAG</label>
-<label><input type="radio" name="weer2"> VERHOOGD MAAR BEHEERSBAAR</label>
-<label><input type="radio" name="weer2"> ONACCEPTABEL</label>
-</td>
-</tr>
-
-</table>
-
-<div class="instructions">
-Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, onweer en combinatie van kou, wind en natte kleding. Vergunningsvoorschriften aangaande mist en onweer zijn leidend.
-</div>
-
-<h2>2 | WATER- EN ROUTECONDITIES</h2>
-
-<table>
-<tr>
-<th scope="row">Meetstation en gegevens inladen</th>
-<td>
-<select id="rws-station" aria-label="Meetstation voor automatisch inladen">
-<option value="">Kies meetstation…</option>
-<option value="lauwersoog">Lauwersoog</option>
-<option value="nes">Nes (Ameland)</option>
-<option value="harlingen">Harlingen</option>
-<option value="eemshaven">Eemshaven</option>
-</select>
-<div class="opties" style="margin-top:8px"><button type="button" class="secondary" id="rws-laad">Laagwater inladen</button></div>
-<div id="rws-uitkomst" aria-live="polite"></div>
-<div id="rws-keuzes" class="rws-chips"></div>
-</td>
-</tr>
-<tr>
-<th scope="row">Voorspelde laagwaterstand</th>
-<td>
-<label class="veld">cm NAP <input type="number"></label>
-<label class="veld">Meetstation <input type="text"></label>
-<label class="veld">Tijd <input type="time"></label>
-<div>Bron: RWS</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Verwachte geuldiepten</th>
-<td>
-<div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
-<div class="geul-lijst" data-soort="diepte">
-<div class="geul-rij"><span class="geul-label">Geul 1</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam">
-<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 1 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 2</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam">
-<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 2 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam">
-<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 3 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam">
-<input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 4 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-</div></td>
-</tr>
-
-<tr>
-<th scope="row">Uitwijkmogelijkheden</th>
-<td>
-<div class="opties">
-<label><input type="radio" name="uitwijk"> Niet aanwezig</label>
-<label><input type="radio" name="uitwijk"> Aanwezig</label>
-<input type="text" placeholder="Locaties">
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Bodem / stroming / bijzonderheden</th>
-<td>
-<label><input type="checkbox"> Geen bijzonderheden</label>
-<textarea style="margin-top:8px"></textarea>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Risico vóór maatregelen</th>
-<td class="opties">
-<label><input type="radio" name="water1"> LAAG</label>
-<label><input type="radio" name="water1"> VERHOOGD</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Motivering / maatregelen</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Risico ná maatregelen</th>
-<td class="stack">
-<label><input type="radio" name="water2"> LAAG</label>
-<label><input type="radio" name="water2"> VERHOOGD MAAR BEHEERSBAAR</label>
-<label><input type="radio" name="water2"> ONACCEPTABEL</label>
-</td>
-</tr>
-
-</table>
-
-<h2>3 | GROEPSANALYSE</h2>
-
-<table>
-<tr>
-<th scope="row">Zwaarte van de tocht uitgelegd</th>
-<td class="opties">
-<label><input type="radio" name="zwaarte"> Ja</label>
-<label><input type="radio" name="zwaarte"> Nee</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Voorgeschreven uitrusting gecontroleerd</th>
-<td class="opties">
-<label><input type="radio" name="uitr"> Ja</label>
-<label><input type="radio" name="uitr"> Nee</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Bijzondere aandachtspunten</th>
-<td>
-<div class="inline aandachtspunten">
-<label><input type="checkbox"> Kinderen</label>
-<label><input type="checkbox"> Ouderen</label>
-<label><input type="checkbox"> Beperkte conditie</label>
-<label><input type="checkbox"> Blessures/beperkingen</label>
-<label><input type="checkbox"> Taal/communicatie</label>
-<label><input type="checkbox"> Groepsgrootte</label>
-<label><input type="checkbox"> Groepsdynamiek</label>
-<label><input type="checkbox"> Lengte deelnemers</label>
-</div>
-<div class="anders-rij">
-<label><input type="checkbox"> Anders:</label>
-<input type="text" aria-label="Anders, namelijk">
-</div>
-<textarea placeholder="Toelichting" aria-label="Toelichting aandachtspunten"></textarea>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Risico vóór maatregelen</th>
-<td class="opties">
-<label><input type="radio" name="groep1"> LAAG</label>
-<label><input type="radio" name="groep1"> VERHOOGD</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Motivering / maatregelen</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Risico ná maatregelen</th>
-<td class="stack">
-<label><input type="radio" name="groep2"> LAAG</label>
-<label><input type="radio" name="groep2"> VERHOOGD MAAR BEHEERSBAAR</label>
-<label><input type="radio" name="groep2"> ONACCEPTABEL</label>
-</td>
-</tr>
-</table>
-
-<h2>4 | VEILIGHEIDSMARGES</h2>
-
-<table>
-<tr>
-<th scope="row">Uiterste aanvaardbare vertrektijd</th>
-<td><input type="time"></td>
-</tr>
-
-<tr>
-<th scope="row">Uiterste tijd(en) geulpassage</th>
-<td>
-<div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
-<div class="geul-lijst" data-soort="passage">
-<div class="geul-rij"><span class="geul-label">Geul 1</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam (geulpassage)">
-<input type="time" data-tijd="uiterste" aria-label="Geul 1 uiterste tijd geulpassage"></div>
-<div class="geul-rij"><span class="geul-label">Geul 2</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam (geulpassage)">
-<input type="time" data-tijd="uiterste" aria-label="Geul 2 uiterste tijd geulpassage"></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam (geulpassage)">
-<input type="time" data-tijd="uiterste" aria-label="Geul 3 uiterste tijd geulpassage"></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span>
-<input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam (geulpassage)">
-<input type="time" data-tijd="uiterste" aria-label="Geul 4 uiterste tijd geulpassage"></div>
-</div>
-<div style="margin-top:10px"><label><input type="checkbox" data-passend> Passend bij tijdschema</label></div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Geulpassage tijd(en) en reservetijd</th>
-<td>
-<p style="margin:0 0 10px">Vul per geul de verwachte passagetijd in. Reservetijd = uiterste tijd geulpassage min verwachte passagetijd. Bij minder dan 30 minuten (of een negatieve reservetijd) is het advies NO-GO.</p>
-<div class="geul-lijst" data-soort="reserve">
-<div class="geul-rij"><span class="geul-label">Geul 1</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 1 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 2</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 2 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 3 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 4 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-</div>
-<div id="reserve-advies" role="status" hidden></div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Point of no return</th>
-<td>
-<label class="veld">Locatie <input type="text"></label>
-<label class="veld">Tijd <input type="time"></label>
-<label><input type="checkbox"> Niet van toepassing</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Reservetijd</th>
-<td><label class="veld"><input type="number" min="0"> minuten</label></td>
-</tr>
-</table>
-
-<h2>5 | BEHEERSMAATREGELEN</h2>
-
-<table>
-<tr>
-<th scope="row">Communicatiemiddelen conform vergunning</th>
-<td class="opties">
-<label><input type="radio" name="comm"> Aanwezig en getest</label>
-<label><input type="radio" name="comm"> Niet in orde</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Noodmiddelen conform vergunning</th>
-<td class="opties">
-<label><input type="radio" name="nood"> Aanwezig en gecontroleerd</label>
-<label><input type="radio" name="nood"> Niet in orde</label>
-</td>
-</tr>
-</table>
-
-<div class="go-nogo">
-
-<h2>6 | GO / NO-GO BESLUIT</h2>
-
-<div id="waarschuwing" role="alert"></div>
-
-<table>
-
-<tr>
-<th scope="row">Bronnen geraadpleegd</th>
-<td>
-<p>(<a href="https://www.knmi.nl/home" target="_blank" rel="noopener" style="color:var(--primary)">KNMI</a> / <a href="https://waterinfo.rws.nl/publiek/waterhoogte" target="_blank" rel="noopener" style="color:var(--primary)">RWS</a> / <a href="https://www.knmi.nl/nederland-nu/maritiem/marifoon" target="_blank" rel="noopener" style="color:var(--primary)">marifoonbericht</a> / lokale waarneming)</p>
-<div class="opties">
-<label><input type="radio" name="bron"> Ja</label>
-<label><input type="radio" name="bron"> Nee</label>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Besluit</th>
-<td class="stack">
-<label><input type="radio" name="besluit"> TOCHT UITVOEREN</label>
-<label><input type="radio" name="besluit"> TOCHT ANNULEREN</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Toegepaste aanpassingen</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Motivering besluit</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Naam beslisser / datum / tijdstip</th>
-<td>
-<div class="inline">
-<input type="text" placeholder="Naam" aria-label="Naam beslisser">
-<input type="date" aria-label="Datum besluit" data-vandaag>
-<input type="time" aria-label="Tijdstip besluit">
-</div>
-</td>
-</tr>
-
-</table>
-
-</div>
-
-<h2>7 | EVALUATIE NA AFLOOP</h2>
-
-<div class="instructions">
-Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incidenten en leerpunten die relevant zijn voor volgende tochten.
-</div>
-
-<table>
-
-<tr>
-<th scope="row">Bijzonderheden tijdens de tocht</th>
-<td>
-<p>Wat gebeurde er? Denk aan weer, waterstand, geulpassages, route, groep of materiaal.</p>
-<textarea></textarea>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Geleerde lessen / verbeterpunten</th>
-<td>
-<p>Wat moet een volgende keer anders of extra worden gecontroleerd?</p>
-<textarea></textarea>
-</td>
-</tr>
-
-</table>
-
-<h2>TOELICHTING VOOR GIDSEN EN BEGELEIDERS</h2>
-
-<div class="footer-text">
-<p>Dit formulier helpt je om vóór vertrek op een gestructureerde manier stil te staan bij de belangrijkste risico’s van de wadlooptocht.</p>
-
-<p>Wanneer een verhoogd risico wordt vastgesteld, beschrijf je welke maatregelen zijn genomen en beoordeel je opnieuw of het restrisico aanvaardbaar is.</p>
-
-<p>Gebruik dit formulier als hulpmiddel bij je professionele afweging. Actuele omstandigheden in het veld, lokale kennis, getijdeninformatie, vergunningvoorschriften en aanwijzingen van bevoegde instanties blijven altijd leidend.</p>
-
-<p>Door bijzonderheden, incidenten en leerpunten na afloop vast te leggen, draagt dit formulier ook bij aan het lerend vermogen van gidsen en organisaties.</p>
-
-<p><strong>Gebruik van AI:</strong> Je kunt AI-ondersteuning gebruiken voor het verzamelen, verwerken en structureren van informatie en voor het signaleren van aandachtspunten. De verantwoordelijkheid voor de risicoanalyse blijft altijd bij de vergunninghouder of verantwoordelijke gids.</p>
-</div>
-
-<div class="buttons">
-<button type="button" onclick="window.print()">Opslaan als PDF / Afdrukken</button>
-<button type="submit">Opslaan</button>
-<button type="button" class="secondary" id="nieuw">Nieuw formulier</button>
-<button type="button" class="secondary" id="ai-controleer" hidden>Controleer met AI</button>
-</div>
-
-<div id="ai-blok" hidden>
-<p class="bewaar-info">“Controleer met AI” stuurt de ingevulde gegevens naar Claude voor een tweede paar ogen. Het gebruikt je eigen Claude-tegoed en vraagt de eerste keer om toestemming. Het advies is een hulpmiddel: het besluit en de verantwoordelijkheid blijven bij de vergunninghouder of verantwoordelijke gids.</p>
-<div id="ai-uitkomst" role="status" aria-live="polite" hidden></div>
-<button type="button" class="secondary" id="ai-stop" hidden>Stop</button>
-</div>
-
-<p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
-<p class="bewaar-info">Versie: 21-11-2026, 8</p>
-<div id="save-status" role="status" aria-live="polite"></div>
-
-</form>
-</main>
-
-<script>
-(function(){
-window.addEventListener('error',function(e){var s=document.getElementById('save-status');if(s)s.textContent='Scriptfout: '+e.message;});
-var KEY='risicoanalyse-wadlooptocht';
-var form=document.querySelector('form');
-var status=document.getElementById('save-status');
-var waarschuwing=document.getElementById('waarschuwing');
-
-/* 2. Toegankelijkheid: koppel rij-kop aan velden, groepeer keuzerondjes */
-Array.prototype.forEach.call(form.querySelectorAll('tr'),function(tr,i){
-var th=tr.querySelector('th'),td=tr.querySelector('td');
-if(!th||!td)return;
-th.id='kop'+i;
-if(td.querySelector('input[type=radio]')){td.setAttribute('role','radiogroup');td.setAttribute('aria-labelledby',th.id);}
-Array.prototype.forEach.call(td.querySelectorAll('input,select,textarea'),function(el){
-if(el.closest('label')||el.hasAttribute('aria-label')||el.type==='radio')return;
-el.setAttribute('aria-labelledby',th.id);
-});
-});
-
-/* 3. Veldsleutels op basis van sectie + rijkop + veld (niet op positie) */
-var fields=Array.prototype.slice.call(form.querySelectorAll('input,textarea,select'));
-function slug(s){return (s||'').replace(/\s+/g,' ').trim();}
-function sectie(el){
-var n=el.closest('table')||el.closest('.stack')||el;
-while(n&&n!==form){
-var p=n.previousElementSibling;
-while(p){if(p.tagName==='H2')return slug(p.textContent);p=p.previousElementSibling;}
-n=n.parentElement;
-if(n&&n.tagName==='DIV'&&n.querySelector(':scope > h2'))return slug(n.querySelector(':scope > h2').textContent);
-}
-return '';
-}
-var used={};
-var keys=fields.map(function(el){
-var tr=el.closest('tr'),th=tr&&tr.querySelector('th'),cont=el.closest('td')||form;
-var k=sectie(el)+'|'+(th?slug(th.textContent):'');
-if(el.type==='checkbox'||el.type==='radio'){var l=el.closest('label');k+='|'+(el.name||'')+'|'+slug(l?l.textContent:'');}
-else{var same=Array.prototype.filter.call(cont.querySelectorAll('input,textarea,select'),function(x){return x.type!=='checkbox'&&x.type!=='radio';});
-k+='|'+el.tagName+(el.type||'')+same.indexOf(el)+(el.getAttribute('aria-label')||'');}
-if(used[k]){used[k]++;k+='#'+used[k];}else used[k]=1;
-return k;
-});
-
-function isCheck(el){return el.type==='checkbox'||el.type==='radio';}
-function grow(t){t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px';}
-var textareas=fields.filter(function(el){return el.tagName==='TEXTAREA';});
-function growAll(){textareas.forEach(grow);}
-
-function save(melding){
-try{
-var data={};
-fields.forEach(function(el,i){data[keys[i]]=isCheck(el)?el.checked:el.value;});
-localStorage.setItem(KEY,JSON.stringify({v:2,data:data}));
-status.textContent=(melding||'Opgeslagen in deze browser')+' om '+new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})+'.';
-}catch(e){status.textContent='Opslaan in deze browser is niet gelukt (mogelijk is opslag geblokkeerd). Gebruik “Opslaan als PDF / Afdrukken”.';}
+// Wadlooptocht-proxy v2: laagwater (Rijkswaterstaat), weer (KNMI HARMONIE-AROME via Open-Meteo)
+// en KNMI-waarschuwingen, voor Lauwersoog. De KNMI-sleutel staat als geheim "KNMI_OPEN_DATA_KEY" in Cloudflare.
+
+const TOEGESTANE_HERKOMST = "https://doow-dot.github.io";
+const LOCATIE = { naam: "Lauwersoog", lat: 53.41, lon: 6.2 };
+// Regio rond de Waddenzee, om waarschuwingen "elders in de regio" te tonen.
+const REGIO = { minLat: 53.2, maxLat: 53.65, minLon: 5.4, maxLon: 7.2 };
+
+// ---------- Water (Rijkswaterstaat) ----------
+const STATIONS = {
+  lauwersoog: ["lauwersoog.waddenzee", "lauwersoog"],
+  nes: ["ameland.nes", "nes"],
+  harlingen: ["harlingen.waddenzee", "harlingen"],
+  eemshaven: ["eemshaven", "eemshaven.waddenzee"],
+};
+const RWS = "https://ddapi20-waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen";
+
+const iso = (d) => d.toISOString().replace("Z", "+00:00");
+
+function lokaal(d) {
+  const opties = { timeZone: "Europe/Amsterdam" };
+  return {
+    datum: d.toLocaleDateString("nl-NL", { ...opties, day: "2-digit", month: "2-digit", year: "numeric" }),
+    tijd: d.toLocaleTimeString("nl-NL", { ...opties, hour: "2-digit", minute: "2-digit" }),
+  };
 }
 
-/* 4. Herstellen (ook oud positioneel formaat) */
-var hersteld=false;
-try{
-var stored=JSON.parse(localStorage.getItem(KEY)||'null');
-if(stored&&stored.v===2){
-fields.forEach(function(el,i){
-if(!(keys[i] in stored.data))return;
-if(isCheck(el))el.checked=!!stored.data[keys[i]];else el.value=stored.data[keys[i]];
-});hersteld=true;
-}else if(Array.isArray(stored)&&stored.length===fields.length){
-fields.forEach(function(el,i){if(isCheck(el))el.checked=!!stored[i];else el.value=stored[i];});hersteld=true;
-}
-}catch(e){}
-if(hersteld)status.textContent='Eerder opgeslagen gegevens zijn hersteld.';
-
-/* 5. Standaard datum besluit = vandaag */
-var datum=form.querySelector('input[data-vandaag]');
-if(datum&&!datum.value)datum.value=new Date().toLocaleDateString('sv-SE');
-
-/* 6. Gekoppelde velden: getal vult vinkvak automatisch (handmatig aanpassen blijft mogelijk) */
-function box(n){return form.querySelector('[data-doel="'+n+'"]');}
-function waarden(n){return Array.prototype.map.call(form.querySelectorAll('[data-koppel="'+n+'"]'),function(i){return parseFloat(i.value);}).filter(function(v){return !isNaN(v);});}
-function koppel(){
-var bft=waarden('bft'),temp=waarden('temp'),w=waarden('water');
-if(bft.length)box('bft-hoog').checked=bft[0]>5;
-if(temp.length){box('temp-laag').checked=Math.min.apply(null,temp)<10;box('temp-hoog').checked=Math.max.apply(null,temp)>25;}
-if(w.length)box('water-laag').checked=w[0]<10;
-Array.prototype.forEach.call(form.querySelectorAll('.geul-rij'),function(r){
-var d=r.querySelector('[data-diepte]'),c=r.querySelector('[data-diep-hoog]');
-if(d&&c&&d.value!==''&&!isNaN(parseFloat(d.value)))c.checked=parseFloat(d.value)>=119;
-});
-}
-
-/* 6b. Weer: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
-function weerRisico(){
-var ja=form.querySelector('input[name="knmi"]:checked');
-var zicht=document.getElementById('zicht').value,nsl=document.getElementById('neerslag').value;
-var hoog=(ja&&slug(ja.closest('label').textContent)==='Ja')||box('bft-hoog').checked||box('temp-laag').checked||box('temp-hoog').checked||box('water-laag').checked||
-['beperkt','slecht','volledig zon onder'].indexOf(zicht)>-1||['mist','regen','sneeuw','ijs'].indexOf(nsl)>-1;
-if(hoog){var r=form.querySelectorAll('input[name="weer1"]')[1];if(r)r.checked=true;}
+async function haalVerwachting(code) {
+  const nu = new Date();
+  const van = new Date(nu.getTime() - 60 * 60 * 1000);
+  const tot = new Date(nu.getTime() + 48 * 60 * 60 * 1000);
+  const res = await fetch(RWS, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      AquoPlusWaarnemingMetadata: {
+        AquoMetadata: {
+          Compartiment: { Code: "OW" },
+          Eenheid: { Code: "cm" },
+          Grootheid: { Code: "WATHTE" },
+          ProcesType: "verwachting",
+        },
+      },
+      Locatie: { Code: code },
+      Periode: { Begindatumtijd: iso(van), Einddatumtijd: iso(tot) },
+    }),
+  });
+  if (res.status === 204) return [];
+  if (!res.ok) throw new Error("Rijkswaterstaat gaf status " + res.status);
+  const data = await res.json();
+  if (!data.Succesvol && data.Foutmelding) return [];
+  const punten = [];
+  for (const w of data.WaarnemingenLijst || []) {
+    for (const m of w.MetingenLijst || []) {
+      const cm = m.Meetwaarde && m.Meetwaarde.Waarde_Numeriek;
+      if (typeof cm === "number" && Math.abs(cm) < 5000) punten.push({ t: new Date(m.Tijdstip), cm });
+    }
+  }
+  return punten.sort((a, b) => a.t - b.t);
 }
 
-/* 6c. Water: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
-function waterRisico(){
-var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
-var uw=form.querySelector('input[name="uitwijk"]:checked');
-var geen=uw&&slug(uw.closest('label').textContent)==='Niet aanwezig';
-if(diep||geen){var r=form.querySelectorAll('input[name="water1"]')[1];if(r)r.checked=true;}
+function vindLaagwaters(punten) {
+  const nu = Date.now();
+  const uit = [];
+  for (let i = 6; i < punten.length - 6; i++) {
+    if (punten[i].t.getTime() < nu) continue;
+    const venster = punten.slice(i - 6, i + 7).map((p) => p.cm);
+    if (punten[i].cm === Math.min(...venster)) {
+      if (!uit.length || punten[i].t - uit[uit.length - 1].t > 3 * 3600 * 1000) uit.push(punten[i]);
+    }
+  }
+  return uit.slice(0, 3).map((p) => ({ cmNAP: p.cm, tijdISO: p.t.toISOString(), ...lokaal(p.t) }));
 }
 
-/* 6d. Groepsanalyse: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
-var aandTd=form.querySelector('.aandachtspunten').closest('td');
-function groepRisico(){
-var nee=['zwaarte','uitr'].some(function(n){var r=form.querySelector('input[name="'+n+'"]:checked');return r&&slug(r.closest('label').textContent)==='Nee';});
-var aand=Array.prototype.some.call(aandTd.querySelectorAll('input[type=checkbox]'),function(c){return c.checked;});
-if(nee||aand){var r=form.querySelectorAll('input[name="groep1"]')[1];if(r)r.checked=true;}
+async function waterBody(station) {
+  try {
+    let punten = [];
+    let gebruiktCode = null;
+    for (const code of STATIONS[station]) {
+      punten = await haalVerwachting(code).catch(() => []);
+      if (punten.length) { gebruiktCode = code; break; }
+    }
+    const laagwaters = vindLaagwaters(punten);
+    return {
+      station,
+      locatieCode: gebruiktCode,
+      geprobeerdeCodes: STATIONS[station],
+      soort: "verwachting Rijkswaterstaat (ruwe, niet-gevalideerde gegevens)",
+      beschikbaar: laagwaters.length > 0,
+      laagwaters,
+      verwachtingTot: punten.length ? punten[punten.length - 1].t.toISOString() : null,
+      opgehaald: new Date().toISOString(),
+      opmerking: laagwaters.length ? null : "Geen verwachting beschikbaar via de openbare dienst: vul handmatig in via waterinfo.rws.nl.",
+    };
+  } catch (e) {
+    return { station, beschikbaar: false, fout: String(e.message || e), opgehaald: new Date().toISOString() };
+  }
 }
 
-/* 6e. ONACCEPTABEL bij een 'Risico ná maatregelen' selecteert automatisch TOCHT ANNULEREN */
-function onacceptabel(){
-var o=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
-if(o){var r=form.querySelectorAll('input[name="besluit"]')[1];if(r)r.checked=true;}
+// ---------- Weer (KNMI HARMONIE-AROME via Open-Meteo) ----------
+const OM_VARS = "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,snowfall,visibility,weather_code";
+const MODELLEN = ["knmi_harmonie_arome_netherlands", "knmi_harmonie_arome_europe"];
+const KOMPAS = ["N", "NO", "O", "ZO", "Z", "ZW", "W", "NW"];
+const kompas = (g) => KOMPAS[Math.round(g / 45) % 8];
+const isNum = (v) => typeof v === "number" && isFinite(v);
+const r1 = (x) => Math.round(x * 10) / 10;
+
+function bft(ms) {
+  const grens = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7];
+  let b = 0;
+  while (b < grens.length && ms >= grens[b]) b++;
+  return b;
 }
 
-/* 6f. Tijdschema: TOCHT ANNULEREN staat standaard aan en gaat uit zodra 'Passend bij tijdschema' is aangevinkt */
-var passend=form.querySelector('[data-passend]');
-function annuleerRadio(){return form.querySelectorAll('input[name="besluit"]')[1];}
-function motTekst(n){
-var tr=form.querySelector('input[name="'+n+'"]').closest('tr'),x=tr.nextElementSibling;
-while(x){var th=x.querySelector('th');if(th&&th.textContent.indexOf('Motivering / maatregelen')===0)return x.querySelector('textarea');x=x.nextElementSibling;}
-return null;
-}
-function zonderMot(n){
-var r=form.querySelectorAll('input[name="'+n+'"]')[1],ta=motTekst(n);
-return !!(r&&r.checked&&ta&&!ta.value.trim());
-}
-function zonderMotivering(){return ['weer1','water1','groep1'].some(zonderMot);}
-function motivatieRegel(){if(zonderMotivering())annuleerRadio().checked=true;}
-function geenGeul(){return !!form.querySelector('[data-geengeul]:checked');}
+async function haalWeer(vanMs, totMs) {
+  const start = Math.floor(vanMs / 3600000) * 3600000;
+  const einde = Math.ceil(totMs / 3600000) * 3600000;
+  const verwacht = (einde - start) / 3600000 + 1;
+  let reden = "geen modeldata ontvangen";
+  let laatste = null;
+  for (const model of MODELLEN) {
+    let d;
+    try {
+      const u = "https://api.open-meteo.com/v1/forecast?latitude=" + LOCATIE.lat + "&longitude=" + LOCATIE.lon +
+        "&hourly=" + OM_VARS + "&models=" + model + "&wind_speed_unit=ms&timezone=UTC&forecast_days=3";
+      const r = await fetch(u);
+      if (!r.ok) { reden = model + ": status " + r.status; continue; }
+      d = await r.json();
+    } catch (e) { reden = model + ": " + (e.message || e); continue; }
+    const h = d && d.hourly;
+    if (!h || !h.time || !h.wind_speed_10m) { reden = model + ": onverwacht antwoord"; continue; }
+    const tijden = h.time.map((t) => Date.parse(t + "Z"));
+    for (let i = tijden.length - 1; i >= 0; i--) {
+      if (isNum(h.wind_speed_10m[i])) { laatste = Math.max(laatste || 0, tijden[i]); break; }
+    }
+    const idx = [];
+    tijden.forEach((t, i) => { if (t >= start && t <= einde) idx.push(i); });
+    const nodig = ["wind_speed_10m", "wind_direction_10m", "temperature_2m", "precipitation"];
+    const compleet = idx.length === verwacht && idx.every((i) => nodig.every((k) => h[k] && isNum(h[k][i])));
+    if (!compleet) { reden = "tijdvenster ligt buiten het verwachtingsbereik van het model"; continue; }
 
-/* 6g. Reservetijd per geul = uiterste tijd geulpassage min verwachte passagetijd; onder 30 min (of negatief) = NO-GO */
-var RESERVE_MIN=30;
-function naarMin(v){var m=/^(\d{1,2}):(\d{2})/.exec(v||'');return m?parseInt(m[1],10)*60+parseInt(m[2],10):null;}
-function geulReserve(){
-var uit=form.querySelectorAll('.geul-lijst[data-soort="passage"] .geul-rij');
-var plan=form.querySelectorAll('.geul-lijst[data-soort="reserve"] .geul-rij');
-var advies=document.getElementById('reserve-advies');
-var nogo=[],berekend=0,geen=geenGeul();
-Array.prototype.forEach.call(plan,function(rij,i){
-var u=uit[i],naam=u?slug(u.querySelector('input[type=text]').value):'';
-rij.querySelector('.geul-naam').textContent=naam;
-var out=rij.querySelector('.reserve-uit');
-var a=u?naarMin(u.querySelector('input[type=time]').value):null,b=naarMin(rij.querySelector('input[type=time]').value);
-if(geen||a===null||b===null){out.textContent='';out.className='reserve-uit';return;}
-var d=a-b;if(d>720)d-=1440;if(d<-720)d+=1440;
-berekend++;
-if(d<RESERVE_MIN){
-nogo.push(rij.querySelector('.geul-label').textContent+(naam?' ('+naam+')':''));
-out.textContent='Reservetijd: '+d+' min – NO-GO'+(d<0?' (na uiterste tijd)':' (minder dan '+RESERVE_MIN+' min)');
-out.className='reserve-uit reserve-nogo';
-}else{
-out.textContent='Reservetijd: '+d+' min – voldoende';
-out.className='reserve-uit reserve-ok';
-}
-});
-if(nogo.length){advies.hidden=false;advies.className='nogo';advies.textContent='NO-GO: reservetijd is minder dan '+RESERVE_MIN+' minuten bij '+nogo.join(', ')+'.';}
-else if(berekend){advies.hidden=false;advies.className='';advies.textContent='Reservetijd is bij alle ingevulde geulen voldoende (minimaal '+RESERVE_MIN+' min).';}
-else{advies.hidden=true;advies.className='';advies.textContent='';}
-return nogo;
-}
-function tijdschema(){
-var r=annuleerRadio();
-var onacc=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
-var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
-if((!passend.checked&&!geenGeul())||onacc||diep||zonderMotivering()||geulReserve().length)r.checked=true;else if(r.checked)r.checked=false;
-}
-function startBesluit(){
-if(!form.querySelector('input[name="besluit"]:checked')&&((!passend.checked&&!geenGeul())||geulReserve().length))annuleerRadio().checked=true;
-}
-
-/* 7. Waarschuwing bij 'TOCHT UITVOEREN' met openstaande problemen */
-function gekozen(name){var r=form.querySelector('input[name="'+name+'"]:checked');return r?slug(r.closest('label').textContent):'';}
-function controleer(){
-var rs=document.getElementById('route');
-var ks=document.getElementById('knmi-soort'),kl=document.getElementById('knmi-link');
-var ku=ks.options[ks.selectedIndex]&&ks.options[ks.selectedIndex].getAttribute('data-url');
-kl.hidden=!ku;
-if(ku){kl.href=ku;kl.textContent='Meer informatie over '+ks.value+' op knmi.nl';}
-document.getElementById('route-anders').hidden=rs.value!=='Anders';
-var vh=document.getElementById('vergunninghouder');
-document.getElementById('vergunninghouder-anders').hidden=vh.value!=='Anders';
-var p=[];
-[['weer2','Weer'],['water2','Water- en routecondities'],['groep2','Groepsanalyse']].forEach(function(x){
-if(gekozen(x[0])==='ONACCEPTABEL')p.push(x[1]+': risico ná maatregelen is ONACCEPTABEL.');
-});
-for(var i=1;i<=4;i++){
-}
-[['weer1','Weer'],['water1','Water- en routecondities'],['groep1','Groepsanalyse']].forEach(function(x){
-if(zonderMot(x[0]))p.push(x[1]+': verhoogd risico zonder motivering / maatregelen.');
-});
-if(gekozen('comm')==='Niet in orde')p.push('Communicatiemiddelen zijn niet in orde.');
-if(gekozen('nood')==='Niet in orde')p.push('Noodmiddelen zijn niet in orde.');
-if(!passend.checked&&!geenGeul())p.push('Geulpassage: “Passend bij tijdschema” is niet aangevinkt.');
-if(geulReserve().length)p.push('Geulpassage: reservetijd is minder dan '+RESERVE_MIN+' minuten (NO-GO).');
-if(gekozen('bron')==='Nee')p.push('Bronnen zijn niet geraadpleegd.');
-var tonen=gekozen('besluit')==='TOCHT UITVOEREN'&&p.length>0;
-waarschuwing.className=tonen?'zichtbaar':'';
-waarschuwing.innerHTML=tonen?'Let op: besluit is TOCHT UITVOEREN, maar er staan punten open:<ul>'+p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>':'';
+    const num = (k) => (h[k] ? idx.map((i) => h[k][i]).filter(isNum) : []);
+    const som = (k) => (h[k] ? idx.slice(1).map((i) => h[k][i]).filter(isNum).reduce((a, b) => a + b, 0) : 0);
+    const wind = idx.map((i) => h.wind_speed_10m[i]);
+    const iMax = idx[wind.indexOf(Math.max(...wind))];
+    const windMax = h.wind_speed_10m[iMax];
+    const graden = h.wind_direction_10m[iMax];
+    const vlaag = num("wind_gusts_10m");
+    const temp = num("temperature_2m");
+    const gev = num("apparent_temperature");
+    const zicht = num("visibility");
+    const codes = num("weather_code");
+    return {
+      beschikbaar: true,
+      locatie: LOCATIE.naam,
+      model,
+      bron: "KNMI HARMONIE-AROME via Open-Meteo.com",
+      opgehaald: new Date().toISOString(),
+      venster: { van: new Date(start).toISOString(), tot: new Date(einde).toISOString() },
+      samenvatting: {
+        windMaxMs: r1(windMax),
+        windMaxBft: bft(windMax),
+        windstootMaxMs: vlaag.length ? r1(Math.max(...vlaag)) : null,
+        windrichtingGraden: Math.round(graden),
+        windrichting: kompas(graden),
+        tempMin: r1(Math.min(...temp)),
+        tempMax: r1(Math.max(...temp)),
+        tempGem: r1(temp.reduce((a, b) => a + b, 0) / temp.length),
+        gevoelMin: gev.length ? r1(Math.min(...gev)) : null,
+        gevoelMax: gev.length ? r1(Math.max(...gev)) : null,
+        zichtMinM: zicht.length ? Math.round(Math.min(...zicht)) : null,
+        neerslagMm: r1(som("precipitation")),
+        sneeuwCm: r1(som("snowfall")),
+        ijs: codes.some((c) => [56, 57, 66, 67].includes(c)),
+      },
+      uren: idx.map((i) => ({
+        tijdISO: new Date(tijden[i]).toISOString(),
+        windMs: r1(h.wind_speed_10m[i]),
+        richting: Math.round(h.wind_direction_10m[i]),
+        temp: r1(h.temperature_2m[i]),
+        zichtM: h.visibility && isNum(h.visibility[i]) ? Math.round(h.visibility[i]) : null,
+        neerslagMm: r1(h.precipitation[i]),
+      })),
+    };
+  }
+  return { beschikbaar: false, reden, verwachtingTot: laatste ? new Date(laatste).toISOString() : null };
 }
 
-var timer;
-function wijziging(e){
-if(e&&e.target&&e.target.tagName==='TEXTAREA')grow(e.target);
-if(e&&e.target&&(e.target.hasAttribute('data-koppel')||e.target.hasAttribute('data-diepte')))koppel();
-var t=e&&e.target;
-if(t&&t.id==='knmi-soort'&&t.value){var ja0=form.querySelectorAll('input[name="knmi"]')[1];if(ja0)ja0.checked=true;}
-if(t&&(t.name==='knmi'||t.id==='knmi-soort'||t.hasAttribute('data-koppel')||t.hasAttribute('data-doel')||t.id==='zicht'||t.id==='neerslag'))weerRisico();
-if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-diep-hoog')||t.name==='uitwijk'))waterRisico();
-if(t&&(t.name==='zwaarte'||t.name==='uitr'||(t.type==='checkbox'&&t.closest('td')===aandTd)))groepRisico();
-if(t&&(t.name==='weer2'||t.name==='water2'||t.name==='groep2'||t.name==='comm'||t.name==='nood'))onacceptabel();
-if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
-if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diep-hoog')||t.hasAttribute('data-diepte')||t.hasAttribute('data-tijd')))tijdschema();
-if(t&&t.tagName==='TEXTAREA'){
-var was=t.dataset.leeg==='1';t.dataset.leeg=t.value.trim()===''?'1':'0';
-if(was&&t.dataset.leeg==='0'){var s2=['weer1','water1','groep1'].filter(function(n){return motTekst(n)===t;})[0];if(s2&&form.querySelectorAll('input[name="'+s2+'"]')[1].checked)tijdschema();}
-}
-if(t&&t.name!=='besluit')motivatieRegel();
-controleer();
-clearTimeout(timer);timer=setTimeout(function(){save('Automatisch opgeslagen');},600);
-}
-form.addEventListener('input',wijziging);
-form.addEventListener('change',wijziging);
+// ---------- Waarschuwingen (KNMI public weather warnings) ----------
+const KDP = "https://api.dataplatform.knmi.nl/open-data/v1/datasets/KNMI-public-weather-warnings/versions/1.0/files";
 
-/* 8. Eenmalige voorinvulling (momentopname verwachting zondag 22-11-2026, Ameland; bronnen: KNMI, Buienradar, Yr, getijtabel Nes). Controleer vooraf KNMI-waarschuwingen en waterinfo.rws.nl. */
-(function(){
-var VKEY=KEY+'-voorinvulling-2026-11-22';
-try{if(hersteld||localStorage.getItem(VKEY))return;}catch(e){if(hersteld)return;}
-function zet(el,v,ev){if(!el)return;el.value=v;el.dispatchEvent(new Event(ev||'input',{bubbles:true}));}
-var tr=Array.prototype.filter.call(form.querySelectorAll('tr'),function(r){var th=r.querySelector('th');return th&&th.textContent.indexOf('Voorspelde laagwaterstand')===0;})[0];
-var lw=tr?tr.querySelectorAll('input'):[];
-zet(form.querySelector('input[type=date]:not([data-vandaag])'),'2026-11-22');
-zet(document.getElementById('route'),'Oversteek Ameland','change');
-zet(form.querySelector('select[aria-label="Windrichting"]'),'NO','change');
-zet(form.querySelector('input[data-koppel="bft"]'),'3');
-zet(form.querySelector('input[data-koppel="temp"]'),'8');
-zet(form.querySelector('input[data-koppel="water"]'),'8.9');
-zet(document.getElementById('neerslag'),'droog','change');
-if(lw.length>=3){zet(lw[0],'-102');zet(lw[1],'Ameland, Nes');zet(lw[2],'13:57');}
-try{localStorage.setItem(VKEY,'1');}catch(e){}
-status.textContent='Voorbeeldwaarden ingevuld (verwachting zondag 22 november, Ameland). Controleer ze vóór gebruik.';
-})();
-startBesluit();
-koppelInit();
-function koppelInit(){controleer();}
-textareas.forEach(function(x){x.dataset.leeg=x.value.trim()===''?'1':'0';});
-growAll();
-window.addEventListener('beforeprint',growAll);
-window.addEventListener('resize',growAll);
-
-
-/* 8b. Water: laagwater automatisch inladen via eigen proxy (verwachting Rijkswaterstaat) */
-(function(){
-var PROXY='https://wadloop-proxy.svenvij.workers.dev/water?station=';
-var NAMEN={lauwersoog:'Lauwersoog',nes:'Nes (Ameland)',harlingen:'Harlingen',eemshaven:'Eemshaven'};
-var RWSOS_EMSH='https://rwsos.rws.nl/viewer/embed/chart/waddenzee/waterkwantiteit/location/EMSH?pd=-2;10&timeslider&theme=light&components=waterlevel';
-var sel=document.getElementById('rws-station'),knop=document.getElementById('rws-laad'),uit=document.getElementById('rws-uitkomst'),keuzes=document.getElementById('rws-keuzes');
-if(!sel||!knop||!uit||!keuzes)return;
-var tr=Array.prototype.filter.call(form.querySelectorAll('tr'),function(r){var th=r.querySelector('th');return th&&th.textContent.indexOf('Voorspelde laagwaterstand')===0;})[0];
-var lw=tr?tr.querySelectorAll('input'):[];
-var dat=form.querySelector('input[type=date]:not([data-vandaag])');
-var teller=0;
-function zet(el,v){if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));}
-function melding(t,fout){uit.className=fout?'fout':'';uit.textContent=t;}
-function isoDatum(d){return d.split('-').reverse().join('-');}
-function hhmm(d){return d.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});}
-function vul(st,l){zet(lw[0],String(l.cmNAP));zet(lw[1],NAMEN[st]);zet(lw[2],l.tijd);}
-function mislukt(st,reden){
-keuzes.innerHTML='';
-uit.className='fout';
-uit.textContent='';
-if(st==='eemshaven'){
-uit.appendChild(document.createTextNode('Voor Eemshaven is nog geen automatische verwachting beschikbaar. Vul cm NAP en tijd handmatig in vanuit de '));
-var a=document.createElement('a');a.href=RWSOS_EMSH;a.target='_blank';a.rel='noopener';a.textContent='RWsOS-grafiek Eemshaven';
-uit.appendChild(a);uit.appendChild(document.createTextNode('.'));
-}else{
-uit.textContent='Automatisch inladen is niet gelukt voor '+NAMEN[st]+'. Vul cm NAP en tijd handmatig in via waterinfo.rws.nl.';
-if(reden){var k=document.createElement('div');k.style.fontWeight='normal';k.style.fontSize='.9rem';k.textContent='Technische reden: '+reden+' (pagina-adres: '+location.origin+')';uit.appendChild(k);}
-}
-}
-function verwerk(st,d){
-keuzes.innerHTML='';
-zet(lw[1],NAMEN[st]);
-if(!d||!d.beschikbaar||!d.laagwaters||!d.laagwaters.length){mislukt(st,(d&&(d.fout||d.opmerking))||'antwoord bevat geen laagwaters');return;}
-var info=' Verwachting Rijkswaterstaat inclusief opzet en afzwaaiing, ruw en niet gevalideerd; opgehaald om '+hhmm(new Date(d.opgehaald))+'. Controleer op waterinfo.rws.nl.';
-var gewenst=dat&&dat.value?dat.value:'';
-var kand=d.laagwaters.filter(function(l){return !gewenst||isoDatum(l.datum)===gewenst;});
-if(gewenst&&!kand.length){
-var tot=d.verwachtingTot?new Date(d.verwachtingTot):null;
-melding('Geen laagwater op de gekozen datum in de beschikbare verwachting'+(tot?' (die loopt tot '+tot.toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit'})+' '+hhmm(tot)+')':'')+'. Vul handmatig in via waterinfo.rws.nl.',true);
-return;
-}
-if(kand.length===1){
-vul(st,kand[0]);
-melding('Ingevuld: laagwater '+kand[0].datum+' '+kand[0].tijd+', '+kand[0].cmNAP+' cm NAP.'+info,false);
-return;
-}
-melding('Kies het laagwater dat bij je tocht hoort.'+info,false);
-kand.forEach(function(l){
-var b=document.createElement('button');b.type='button';b.className='secondary';
-b.textContent=l.datum.slice(0,5)+' '+l.tijd+' · '+l.cmNAP+' cm NAP';
-b.addEventListener('click',function(){vul(st,l);melding('Ingevuld: laagwater '+l.datum+' '+l.tijd+', '+l.cmNAP+' cm NAP.'+info,false);keuzes.innerHTML='';});
-keuzes.appendChild(b);
-});
-}
-function laad(){
-var st=sel.value;
-if(!st){melding('Kies eerst een meetstation.',true);return;}
-var nr=++teller;
-keuzes.innerHTML='';
-melding('Gegevens ophalen…',false);
-var ctl=('AbortController' in window)?new AbortController():null;
-var timer=setTimeout(function(){if(ctl)ctl.abort();},12000);
-fetch(PROXY+encodeURIComponent(st),ctl?{signal:ctl.signal}:{})
-.then(function(r){if(!r.ok)throw new Error('status '+r.status);return r.json();})
-.then(function(d){clearTimeout(timer);if(nr===teller)verwerk(st,d);})
-.catch(function(e){clearTimeout(timer);if(nr===teller)mislukt(st,String((e&&e.message)||e));});
-}
-sel.addEventListener('change',function(){if(sel.value)laad();else{keuzes.innerHTML='';melding('',false);}});
-knop.addEventListener('click',laad);
-})();
-
-/* 9. AI-controle: Claude leest het ingevulde formulier als tweede paar ogen */
-(function(){
-var knop=document.getElementById('ai-controleer'),blok=document.getElementById('ai-blok'),uit=document.getElementById('ai-uitkomst'),stop=document.getElementById('ai-stop');
-var sample=null,ctl=null;
-if(!knop||!window.claude||!window.claude.use)return;
-window.claude.use('sample').then(function(s){if(s){sample=s;knop.hidden=false;blok.hidden=false;}}).catch(function(){});
-
-function lbl(el){var l=el.closest('label');if(l)return slug(l.textContent);return el.getAttribute('aria-label')||el.getAttribute('placeholder')||'';}
-function formulierTekst(){
-var out=[];
-Array.prototype.forEach.call(form.querySelectorAll('h2,tr'),function(n){
-if(n.tagName==='H2'){out.push('\n## '+slug(n.textContent));return;}
-var th=n.querySelector('th'),td=n.querySelector('td');
-if(!th||!td)return;
-var w=[],rc=false,radios=td.querySelectorAll('input[type=radio]');
-Array.prototype.forEach.call(td.querySelectorAll('input,select,textarea'),function(el){
-if(el.type==='radio'||el.type==='checkbox'){
-if(el.checked){w.push(slug(el.closest('label').textContent));if(el.type==='radio')rc=true;}
-return;
-}
-if(el.hidden)return;
-var v=el.tagName==='SELECT'?(el.value?el.options[el.selectedIndex].text:''):el.value;
-if(slug(v)!=='')w.push((lbl(el)?lbl(el)+': ':'')+slug(v));
-});
-if(radios.length&&!rc)w.push('(geen keuze gemaakt)');
-out.push('- '+slug(th.textContent)+': '+(w.length?w.join(' | '):'(leeg)'));
-});
-return out.join('\n');
+async function laatsteSnapshot(sleutel) {
+  const lijst = await fetch(KDP + "?maxKeys=20&sorting=desc&orderBy=filename", { headers: { Authorization: sleutel } });
+  if (!lijst.ok) throw new Error("KNMI bestandslijst gaf status " + lijst.status);
+  const l = await lijst.json();
+  const namen = (l.files || []).map((f) => f.filename).filter((n) => /\.json$/i.test(n)).slice(0, 5);
+  if (!namen.length) throw new Error("geen JSON-bestanden gevonden in de KNMI-dataset");
+  for (const naam of namen) {
+    const u = await fetch(KDP + "/" + encodeURIComponent(naam) + "/url", { headers: { Authorization: sleutel } });
+    if (!u.ok) throw new Error("KNMI download-link gaf status " + u.status);
+    const link = (await u.json()).temporaryDownloadUrl;
+    const f = await fetch(link);
+    if (!f.ok) throw new Error("KNMI bestand gaf status " + f.status);
+    const snap = await f.json();
+    if (snap.metadata && snap.metadata.publication_type === "test") continue;
+    return { naam, snap };
+  }
+  throw new Error("alleen testbestanden gevonden");
 }
 
-var REGELS=[
-'Je bent een tweede paar ogen bij een Nederlandse risicoanalyse voor een wadlooptocht (praktisch beslisformulier met onderdelen Tochtgegevens, Weer, Water- en routecondities, Groepsanalyse, Veiligheidsmarges, Beheersmaatregelen, Go/No-go besluit en Evaluatie).',
-'Hieronder staat het formulier zoals het nu is ingevuld. Elke regel is een veld met zijn waarde; "(leeg)" of "(geen keuze gemaakt)" betekent dat het nog niet is ingevuld.',
-'Je taak: signaleer wat een gids moet nalopen voordat hij vertrekt.',
-'Let op: 1) belangrijke ontbrekende gegevens; 2) tegenstrijdigheden, bijvoorbeeld een geulpassage of uiterste tijd die niet past bij laagwater, vertrek- en eindtijd of tijdschema; een verhoogd risico zonder motivering of maatregelen; een besluit dat niet past bij de ingevulde risico\'s of bij onvoldoende communicatie- of noodmiddelen; 3) waarden die onwaarschijnlijk of verkeerd ingevuld lijken.',
-'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Per geul geldt: reservetijd = uiterste tijd geulpassage min verwachte passagetijd; minder dan 30 minuten (of negatief) is een NO-GO.',
-'Regels: gebruik alleen wat in het formulier staat. Verzin geen weersverwachting, getijdetijden of feiten en zeg niet dat gegevens kloppen met officiële bronnen. Neem zelf geen go/no-go besluit en zeg niet dat de tocht veilig is. Als het formulier nog halverwege is ingevuld, noem dan alleen de belangrijkste ontbrekende punten.',
-'Uitvoer: Nederlands, platte tekst zonder opmaaktekens als sterretjes of hekjes. Gebruik maximaal drie kopjes in hoofdletters (ONTBREEKT, TEGENSTRIJDIG OF OPVALLEND, GEEN OPMERKINGEN) en korte regels die beginnen met "- ". Maximaal 12 regels in totaal. Sluit af met één zin dat de verantwoordelijkheid bij de vergunninghouder of verantwoordelijke gids blijft.'
-].join('\n');
-
-function melding(code){
-if(code==='not_granted')return 'Geen toestemming gegeven om Claude te gebruiken. Je kunt het formulier gewoon verder zelf invullen.';
-if(code==='rate_limited')return 'Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.';
-return 'De controle is niet gelukt. Probeer het later opnieuw; het formulier zelf werkt gewoon door.';
+function ringBevat(ring, lon, lat) {
+  let binnen = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) binnen = !binnen;
+  }
+  return binnen;
+}
+const polygonen = (a) => (!a ? [] : a.type === "MultiPolygon" ? a.coordinates : [a.coordinates]);
+const bevatPunt = (a, lon, lat) => polygonen(a).some((p) => p && p[0] && ringBevat(p[0], lon, lat));
+function raaktRegio(a) {
+  return polygonen(a).some((p) => {
+    if (!p || !p[0]) return false;
+    let minX = 999, maxX = -999, minY = 999, maxY = -999;
+    for (const [x, y] of p[0]) { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+    return minX <= REGIO.maxLon && maxX >= REGIO.minLon && minY <= REGIO.maxLat && maxY >= REGIO.minLat;
+  });
 }
 
-knop.addEventListener('click',function(){
-if(!sample)return;
-var ingevuld=formulierTekst();
-ctl=new AbortController();
-knop.disabled=true;stop.hidden=false;uit.hidden=false;uit.textContent='Bezig met controleren…';
-sample(REGELS+'\n\n--- FORMULIER ---\n'+ingevuld,{
-signal:ctl.signal,cache:false,
-onText:function(t){uit.textContent=t.text;}
-}).then(function(r){
-uit.textContent=r.text+(r.truncated?'\n\n(Antwoord is afgekapt.)':'');
-}).catch(function(e){
-if(e&&e.code==='cancelled'){uit.textContent=(e.text||'')+'\n\n(Gestopt.)';}
-else uit.textContent=(e&&e.text?e.text+'\n\n':'')+melding(e&&e.code);
-}).then(function(){knop.disabled=false;stop.hidden=true;ctl=null;});
-});
-stop.addEventListener('click',function(){if(ctl)ctl.abort();});
-})();
+// Zet de KNMI-verschijnselnaam om naar de keuzelijst in het formulier.
+function soortVoorFormulier(ph) {
+  const s = String(ph || "").toLowerCase().replace(/[^a-z]/g, "");
+  if (/fog|mist/.test(s)) return "Mist";
+  if (/waterspout|waterhoos|waterhozen/.test(s)) return "Waterhozen";
+  if (/thunder|onweer/.test(s)) return "Onweersbuien";
+  if (/roadice|ice|gladheid|slip/.test(s)) return "Gladheid";
+  if (/snow|sneeuw/.test(s)) return "Sneeuw";
+  if (/hightemp|heat|hitte/.test(s)) return "Hitte";
+  if (/lowtemp|cold|kou/.test(s)) return "Kou";
+  if (/rain|regen/.test(s)) return "Zware regen";
+  if (/wind/.test(s)) return "Windstoten";
+  return String(ph || "onbekend");
+}
+const ERNST = { red: 3, orange: 2, yellow: 1 };
 
-form.addEventListener('submit',function(e){e.preventDefault();save('Opgeslagen in deze browser');});
+async function waarschuwingenBody(env, vanMs, totMs) {
+  if (!env.KNMI_OPEN_DATA_KEY) {
+    return { beschikbaar: false, fout: "De KNMI-sleutel ontbreekt in de Worker (geheim KNMI_OPEN_DATA_KEY)." };
+  }
+  try {
+    const { naam, snap } = await laatsteSnapshot(env.KNMI_OPEN_DATA_KEY);
+    const gegenereerd = snap.metadata && snap.metadata.generated_at ? new Date(snap.metadata.generated_at) : null;
+    const verouderd = !gegenereerd || Date.now() - gegenereerd.getTime() > 30 * 3600 * 1000;
+    const opLocatie = [];
+    const inRegio = [];
+    for (const w of snap.warnings || []) {
+      if (w.operational_status !== "Actual" || (w.status || "active") !== "active") continue;
+      const tekst = (w.texts && ((w.texts.nl && w.texts.nl.headline) || (w.texts.en && w.texts.en.headline))) || "";
+      for (const p of w.parts || []) {
+        if ((p.status || "active") !== "active") continue;
+        const on = new Date(p.onset), ex = new Date(p.expires);
+        if (!(on.getTime() < totMs && ex.getTime() > vanMs)) continue;
+        const gb = p["area description"] || p.area_description || p.areaDescription || {};
+        const rec = {
+          verschijnsel: w.phenomenon,
+          soort: soortVoorFormulier(w.phenomenon),
+          type: w.warning_type,
+          kleur: p.color,
+          kans: p.probability_percentage_range || null,
+          van: { ...lokaal(on), iso: on.toISOString() },
+          tot: { ...lokaal(ex), iso: ex.toISOString() },
+          koptekst: tekst,
+          gebied: gb.nl || gb.en || "",
+        };
+        if (bevatPunt(p.area, LOCATIE.lon, LOCATIE.lat)) opLocatie.push(rec);
+        else if (raaktRegio(p.area)) inRegio.push(rec);
+      }
+    }
+    const sorteer = (a, b) => (ERNST[b.kleur] || 0) - (ERNST[a.kleur] || 0);
+    opLocatie.sort(sorteer);
+    inRegio.sort(sorteer);
+    return {
+      beschikbaar: true,
+      bestand: naam,
+      gegenereerd: gegenereerd ? gegenereerd.toISOString() : null,
+      verouderd,
+      opLocatie,
+      inRegio,
+      opgehaald: new Date().toISOString(),
+    };
+  } catch (e) {
+    return { beschikbaar: false, fout: String(e.message || e), opgehaald: new Date().toISOString() };
+  }
+}
 
-document.getElementById('nieuw').addEventListener('click',function(){
-if(!window.confirm('Alle ingevulde gegevens wissen en een nieuw formulier starten?'))return;
-try{localStorage.removeItem(KEY);}catch(e){}
-form.reset();
-if(datum)datum.value=new Date().toLocaleDateString('sv-SE');
-textareas.forEach(function(x){x.dataset.leeg='1';});
-startBesluit();controleer();growAll();
-status.textContent='Nieuw formulier gestart.';
-window.scrollTo({top:0});
-});
-})();
-</script>
-</body>
-</html>
+// ---------- Aanvraag afhandelen ----------
+async function metCache(request, ctx, ttl, cors, bouw) {
+  const cache = caches.default;
+  const sleutel = new Request(request.url);
+  const gecacht = await cache.match(sleutel);
+  if (gecacht) return new Response(gecacht.body, { headers: cors });
+  const body = await bouw();
+  const antwoord = new Response(JSON.stringify(body), { headers: { ...cors, "Cache-Control": "public, max-age=" + ttl } });
+  if (body.beschikbaar) ctx.waitUntil(cache.put(sleutel, antwoord.clone()));
+  return antwoord;
+}
+
+export default {
+  async fetch(request, env, ctx) {
+    const cors = {
+      "Access-Control-Allow-Origin": TOEGESTANE_HERKOMST,
+      "Content-Type": "application/json; charset=utf-8",
+    };
+    const fout = (status, tekst, extra) => new Response(JSON.stringify({ fout: tekst, ...(extra || {}) }), { status, headers: cors });
+    const url = new URL(request.url);
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+
+    if (url.pathname === "/water") {
+      const station = (url.searchParams.get("station") || "").toLowerCase();
+      if (!STATIONS[station]) return fout(400, "Onbekend station", { mogelijk: Object.keys(STATIONS) });
+      return metCache(request, ctx, 600, cors, () => waterBody(station));
+    }
+
+    if (url.pathname === "/weer" || url.pathname === "/waarschuwingen") {
+      const vanMs = Date.parse(url.searchParams.get("van") || "");
+      const totMs = Date.parse(url.searchParams.get("tot") || "");
+      if (!isFinite(vanMs) || !isFinite(totMs) || totMs <= vanMs) return fout(400, "Geef een geldig tijdvenster op met van en tot (ISO-tijd).");
+      if (totMs - vanMs > 48 * 3600 * 1000) return fout(400, "Het tijdvenster mag maximaal 48 uur zijn.");
+      if (url.pathname === "/weer") return metCache(request, ctx, 600, cors, () => haalWeer(vanMs, totMs));
+      return metCache(request, ctx, 300, cors, () => waarschuwingenBody(env, vanMs, totMs));
+    }
+
+    return fout(404, "Onbekend pad");
+  },
+};
