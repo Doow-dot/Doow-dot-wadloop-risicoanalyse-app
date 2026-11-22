@@ -44,6 +44,13 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 .reserve-uit{font-weight:bold}
 .reserve-ok{color:#1b6e2e}
 .reserve-nogo{color:#8a1111}
+.doorwaad{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.doorwaad label{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.dw-info{flex:1 1 100%;font-size:.9rem;color:#444}
+.dw-info:empty{display:none}
+.geul-lijst[data-soort=diepte] .geul-rij{grid-template-columns:auto minmax(120px,1fr) 110px 24px}
+.doorwaad input[type=time]{width:140px}
+.geul-meer{margin-top:8px}
 #reserve-advies{margin-top:10px;font-weight:bold}
 #reserve-advies.nogo{color:#8a1111;border:2px solid #cc2b2b;background:#fff4f4;padding:8px 10px}
 .aandachtspunten{gap:8px 15px;margin-bottom:8px}
@@ -97,6 +104,7 @@ form label input[type=checkbox],form label input[type=radio]{width:20px;height:2
 .geul-rij span:empty{display:none}
 .geul-keuze{gap:6px;white-space:normal}
 .geul-keuze label{flex:1;justify-content:center}
+.doorwaad label{white-space:normal}
 .buttons{display:flex;flex-direction:column;gap:10px}
 button{width:100%;margin:0;min-height:48px;border-radius:8px}
 }
@@ -382,24 +390,27 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <th scope="row">Verwachte geuldiepten</th>
 <td>
 <div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
+<p style="margin:0 0 10px">Vul per geul de verwachte diepte op de verwachte doorwaadtijd in. De uiterste doorwaadtijd is het moment waarop de geul 120 cm diep wordt, berekend uit de verwachte waterstand van Rijkswaterstaat (inclusief opzet en afwaaiing) bij het meetstation hierboven. Reservetijd = de vroegste van de uiterste doorwaadtijd en de uiterste tijd geulpassage (4 | Veiligheidsmarges) min verwachte doorwaadtijd. Bij minder dan 30 minuten (of een negatieve reservetijd) is het advies NO-GO.</p>
 <div class="geul-lijst" data-soort="diepte">
 <div class="geul-rij"><span class="geul-label">Geul 1</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam">
 <input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 1 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
+<div class="doorwaad"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="1" aria-label="Geul 1 verwachte doorwaadtijd"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="1" aria-label="Geul 1 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span><div class="dw-info" aria-live="polite"></div></div></div>
 <div class="geul-rij"><span class="geul-label">Geul 2</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam">
 <input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 2 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span>
+<div class="doorwaad"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="2" aria-label="Geul 2 verwachte doorwaadtijd"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="2" aria-label="Geul 2 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span><div class="dw-info" aria-live="polite"></div></div></div>
+<div class="geul-rij" hidden><span class="geul-label">Geul 3</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam">
 <input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 3 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span>
+<div class="doorwaad"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="3" aria-label="Geul 3 verwachte doorwaadtijd"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="3" aria-label="Geul 3 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span><div class="dw-info" aria-live="polite"></div></div></div>
+<div class="geul-rij" hidden><span class="geul-label">Geul 4</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam">
 <input type="number" min="0" placeholder="Diepte" data-diepte aria-label="Geul 4 diepte in cm"><span>cm</span>
-<span class="geul-keuze"><label><input type="checkbox" data-diep-hoog> &gt;120 cm</label></span></div>
-</div></td>
+<div class="doorwaad"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="4" aria-label="Geul 4 verwachte doorwaadtijd"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="4" aria-label="Geul 4 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span><div class="dw-info" aria-live="polite"></div></div></div>
+</div>
+<div class="geul-meer"><button type="button" class="secondary" data-geul-meer>Geul toevoegen</button></div>
+</td>
 </tr>
 
 <tr>
@@ -410,14 +421,6 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <label><input type="radio" name="uitwijk"> Aanwezig</label>
 <input type="text" placeholder="Locaties">
 </div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Bodem / stroming / bijzonderheden</th>
-<td>
-<label><input type="checkbox"> Geen bijzonderheden</label>
-<textarea style="margin-top:8px"></textarea>
 </td>
 </tr>
 
@@ -527,31 +530,15 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <div class="geul-rij"><span class="geul-label">Geul 2</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam (geulpassage)">
 <input type="time" data-tijd="uiterste" aria-label="Geul 2 uiterste tijd geulpassage"></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span>
+<div class="geul-rij" hidden><span class="geul-label">Geul 3</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam (geulpassage)">
 <input type="time" data-tijd="uiterste" aria-label="Geul 3 uiterste tijd geulpassage"></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span>
+<div class="geul-rij" hidden><span class="geul-label">Geul 4</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam (geulpassage)">
 <input type="time" data-tijd="uiterste" aria-label="Geul 4 uiterste tijd geulpassage"></div>
 </div>
+<div class="geul-meer"><button type="button" class="secondary" data-geul-meer>Geul toevoegen</button></div>
 <div style="margin-top:10px"><label><input type="checkbox" data-passend> Passend bij tijdschema</label></div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Geulpassage tijd(en) en reservetijd</th>
-<td>
-<p style="margin:0 0 10px">Vul per geul de verwachte passagetijd in. Reservetijd = uiterste tijd geulpassage min verwachte passagetijd. Bij minder dan 30 minuten (of een negatieve reservetijd) is het advies NO-GO.</p>
-<div class="geul-lijst" data-soort="reserve">
-<div class="geul-rij"><span class="geul-label">Geul 1</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 1 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 2</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 2 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 3</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 3 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-<div class="geul-rij"><span class="geul-label">Geul 4</span><span class="geul-naam"></span>
-<input type="time" data-tijd="plan" aria-label="Geul 4 verwachte tijd geulpassage"><span class="reserve-uit" aria-live="polite"></span></div>
-</div>
 <div id="reserve-advies" role="status" hidden></div>
 </td>
 </tr>
@@ -697,7 +684,7 @@ Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incide
 </div>
 
 <p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
-<p class="bewaar-info">Versie: 21-11-2026, 9</p>
+<p class="bewaar-info">Versie: 21-11-2026, 11</p>
 <div id="save-status" role="status" aria-live="polite"></div>
 
 </form>
@@ -710,6 +697,9 @@ var KEY='risicoanalyse-wadlooptocht';
 var form=document.querySelector('form');
 var status=document.getElementById('save-status');
 var waarschuwing=document.getElementById('waarschuwing');
+var rwsReeks=null,rwsStation='';
+var tochtDatum=form.querySelector('input[type=date]:not([data-vandaag])');
+var vertrekEl=form.querySelector('input[aria-label="Geplande vertrektijd"]');
 
 /* 2. Toegankelijkheid: koppel rij-kop aan velden, groepeer keuzerondjes */
 Array.prototype.forEach.call(form.querySelectorAll('tr'),function(tr,i){
@@ -741,7 +731,7 @@ var keys=fields.map(function(el){
 var tr=el.closest('tr'),th=tr&&tr.querySelector('th'),cont=el.closest('td')||form;
 var k=sectie(el)+'|'+(th?slug(th.textContent):'');
 if(el.type==='checkbox'||el.type==='radio'){var l=el.closest('label');k+='|'+(el.name||'')+'|'+slug(l?l.textContent:'');}
-else{var same=Array.prototype.filter.call(cont.querySelectorAll('input,textarea,select'),function(x){return x.type!=='checkbox'&&x.type!=='radio';});
+else{var same=Array.prototype.filter.call(cont.querySelectorAll('input,textarea,select'),function(x){return x.type!=='checkbox'&&x.type!=='radio'&&!x.hasAttribute('data-doorwaad')&&!x.hasAttribute('data-uiterste-doorwaad');});
 k+='|'+el.tagName+(el.type||'')+same.indexOf(el)+(el.getAttribute('aria-label')||'');}
 if(used[k]){used[k]++;k+='#'+used[k];}else used[k]=1;
 return k;
@@ -767,7 +757,11 @@ try{
 var stored=JSON.parse(localStorage.getItem(KEY)||'null');
 if(stored&&stored.v===2){
 fields.forEach(function(el,i){
-if(!(keys[i] in stored.data))return;
+if(!(keys[i] in stored.data)){
+var gn=el.getAttribute('data-doorwaad');
+if(gn){var oud='4 | VEILIGHEIDSMARGES|Geulpassage tijd(en) en reservetijd|INPUTtime'+(gn-1)+'Geul '+gn+' verwachte tijd geulpassage';if(oud in stored.data)el.value=stored.data[oud];}
+return;
+}
 if(isCheck(el))el.checked=!!stored.data[keys[i]];else el.value=stored.data[keys[i]];
 });hersteld=true;
 }else if(Array.isArray(stored)&&stored.length===fields.length){
@@ -788,10 +782,6 @@ var bft=waarden('bft'),temp=waarden('temp'),w=waarden('water');
 if(bft.length)box('bft-hoog').checked=bft[0]>5;
 if(temp.length){box('temp-laag').checked=Math.min.apply(null,temp)<10;box('temp-hoog').checked=Math.max.apply(null,temp)>25;}
 if(w.length)box('water-laag').checked=w[0]<10;
-Array.prototype.forEach.call(form.querySelectorAll('.geul-rij'),function(r){
-var d=r.querySelector('[data-diepte]'),c=r.querySelector('[data-diep-hoog]');
-if(d&&c&&d.value!==''&&!isNaN(parseFloat(d.value)))c.checked=parseFloat(d.value)>=119;
-});
 }
 
 /* 6b. Weer: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
@@ -805,7 +795,7 @@ if(hoog){var r=form.querySelectorAll('input[name="weer1"]')[1];if(r)r.checked=tr
 
 /* 6c. Water: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
 function waterRisico(){
-var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
+var diep=diepHoog();
 var uw=form.querySelector('input[name="uitwijk"]:checked');
 var geen=uw&&slug(uw.closest('label').textContent)==='Niet aanwezig';
 if(diep||geen){var r=form.querySelectorAll('input[name="water1"]')[1];if(r)r.checked=true;}
@@ -846,16 +836,19 @@ var RESERVE_MIN=30;
 function naarMin(v){var m=/^(\d{1,2}):(\d{2})/.exec(v||'');return m?parseInt(m[1],10)*60+parseInt(m[2],10):null;}
 function geulReserve(){
 var uit=form.querySelectorAll('.geul-lijst[data-soort="passage"] .geul-rij');
-var plan=form.querySelectorAll('.geul-lijst[data-soort="reserve"] .geul-rij');
+var plan=form.querySelectorAll('.geul-lijst[data-soort="diepte"] .geul-rij');
 var advies=document.getElementById('reserve-advies');
 var nogo=[],berekend=0,geen=geenGeul();
 Array.prototype.forEach.call(plan,function(rij,i){
 var u=uit[i],naam=u?slug(u.querySelector('input[type=text]').value):'';
-rij.querySelector('.geul-naam').textContent=naam;
-var out=rij.querySelector('.reserve-uit');
-var a=u?naarMin(u.querySelector('input[type=time]').value):null,b=naarMin(rij.querySelector('input[type=time]').value);
-if(geen||a===null||b===null){out.textContent='';out.className='reserve-uit';return;}
-var d=a-b;if(d>720)d-=1440;if(d<-720)d+=1440;
+if(!naam){var n2=rij.querySelector('input[type=text]');naam=n2?slug(n2.value):'';}
+var out=rij.querySelector('.reserve-uit'),inp=rij.querySelector('input[data-tijd="plan"]');
+if(!out||!inp)return;
+var a=u?naarMin(u.querySelector('input[type=time]').value):null,b=naarMin(inp.value);
+var ue=rij.querySelector('input[data-uiterste-doorwaad]'),c=ue?naarMin(ue.value):null;
+if(geen||b===null||(a===null&&c===null)){out.textContent='';out.className='reserve-uit';return;}
+var ds=[a,c].filter(function(x){return x!==null;}).map(function(x){var v=x-b;if(v>720)v-=1440;if(v<-720)v+=1440;return v;});
+var d=Math.min.apply(null,ds);
 berekend++;
 if(d<RESERVE_MIN){
 nogo.push(rij.querySelector('.geul-label').textContent+(naam?' ('+naam+')':''));
@@ -871,10 +864,97 @@ else if(berekend){advies.hidden=false;advies.className='';advies.textContent='Re
 else{advies.hidden=true;advies.className='';advies.textContent='';}
 return nogo;
 }
+
+/* 6h. Geulen: standaard twee zichtbaar, meer toevoegen op verzoek */
+var geulAantal=2;
+var geulLijsten='.geul-lijst[data-soort="diepte"],.geul-lijst[data-soort="passage"]';
+function toonGeulen(n){
+geulAantal=Math.max(2,Math.min(4,n));
+Array.prototype.forEach.call(form.querySelectorAll(geulLijsten),function(lijst){
+Array.prototype.forEach.call(lijst.querySelectorAll('.geul-rij'),function(r,i){r.hidden=i>=geulAantal;});
+});
+Array.prototype.forEach.call(form.querySelectorAll('[data-geul-meer]'),function(b){b.hidden=geulAantal>=4;});
+}
+function geulenMetWaarde(){
+var max=2;
+Array.prototype.forEach.call(form.querySelectorAll(geulLijsten),function(lijst){
+Array.prototype.forEach.call(lijst.querySelectorAll('.geul-rij'),function(r,i){
+var gevuld=Array.prototype.some.call(r.querySelectorAll('input'),function(x){return isCheck(x)?x.checked:x.value!=='';});
+if(gevuld&&i+1>max)max=i+1;
+});
+});
+return max;
+}
+Array.prototype.forEach.call(form.querySelectorAll('[data-geul-meer]'),function(b){b.addEventListener('click',function(){toonGeulen(geulAantal+1);});});
+/* 6i. Uiterste doorwaadtijd per geul: moment waarop de geul 120 cm diep wordt, uit de verwachte waterstand (RWS, incl. opzet en afwaaiing) */
+var GRENS_DIEPTE=120;
+function diepHoog(){return Array.prototype.some.call(form.querySelectorAll('[data-diepte]'),function(d){var v=parseFloat(d.value);return !isNaN(v)&&v>=119;});}
+function hoogteBij(reeks,t){
+if(!reeks.length||t<reeks[0][0]||t>reeks[reeks.length-1][0])return null;
+for(var i=1;i<reeks.length;i++){
+if(reeks[i][0]>=t){var a=reeks[i-1],b=reeks[i],f=(t-a[0])/((b[0]-a[0])||1);return a[1]+(b[1]-a[1])*f;}
+}
+return reeks[reeks.length-1][1];
+}
+function eersteBereikt(reeks,t0,doel){
+var h0=hoogteBij(reeks,t0);
+if(h0===null)return null;
+if(h0>=doel)return t0;
+var pt=t0,ph=h0;
+for(var i=0;i<reeks.length;i++){
+var r=reeks[i];
+if(r[0]<=t0)continue;
+if(r[1]>=doel){var f=(doel-ph)/((r[1]-ph)||1);return pt+(r[0]-pt)*f;}
+pt=r[0];ph=r[1];
+}
+return undefined;
+}
+function offsetAmsHoofd(ts){
+var f=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Amsterdam',hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+var p={};f.formatToParts(new Date(ts)).forEach(function(x){p[x.type]=x.value;});
+return Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second)-Math.floor(ts/1000)*1000;
+}
+function amsNaarUtcHoofd(datum,tijd){
+var d=datum.split('-'),t=tijd.split(':');
+var gok=Date.UTC(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);
+return gok-offsetAmsHoofd(gok-offsetAmsHoofd(gok));
+}
+function lokTijd(ms){return new Date(ms).toLocaleTimeString('nl-NL',{timeZone:'Europe/Amsterdam',hour:'2-digit',minute:'2-digit'});}
+function lokDatum(ms){return new Date(ms).toLocaleDateString('nl-NL',{timeZone:'Europe/Amsterdam',day:'2-digit',month:'2-digit'});}
+function zetUiterste(el,ms){el.value=ms===null?'':lokTijd(ms);el.dispatchEvent(new Event('input',{bubbles:true}));}
+function doorwaadRij(rij){
+var dEl=rij.querySelector('[data-diepte]'),tEl=rij.querySelector('[data-doorwaad]'),uEl=rij.querySelector('[data-uiterste-doorwaad]'),info=rij.querySelector('.dw-info');
+if(!dEl||!tEl||!uEl||!info)return;
+var D=parseFloat(dEl.value);
+if(isNaN(D)||!tEl.value){info.textContent='';return;}
+if(!rwsReeks||!rwsReeks.length){info.textContent='Geen verwachting van Rijkswaterstaat geladen: kies hierboven een meetstation met beschikbare verwachting, of vul de uiterste doorwaadtijd zelf in.';return;}
+if(!tochtDatum||!tochtDatum.value){info.textContent='Vul eerst de datum in bij 0 | Tochtgegevens.';return;}
+var t0=amsNaarUtcHoofd(tochtDatum.value,tEl.value);
+var vm=vertrekEl&&vertrekEl.value?naarMin(vertrekEl.value):null,tm=naarMin(tEl.value);
+if(vm!==null&&tm!==null&&tm<vm)t0+=24*3600000;
+var h0=hoogteBij(rwsReeks,t0);
+if(h0===null){
+info.textContent='De doorwaadtijd ('+lokDatum(t0)+' '+lokTijd(t0)+') valt buiten de verwachting van '+(rwsStation||'het station')+' (loopt van '+lokDatum(rwsReeks[0][0])+' '+lokTijd(rwsReeks[0][0])+' tot '+lokDatum(rwsReeks[rwsReeks.length-1][0])+' '+lokTijd(rwsReeks[rwsReeks.length-1][0])+'). Vul zelf in.';
+return;
+}
+if(D>=GRENS_DIEPTE){zetUiterste(uEl,t0);info.textContent='De verwachte diepte is op de doorwaadtijd al '+D+' cm: uiterste doorwaadtijd = verwachte doorwaadtijd.';return;}
+var doel=h0+(GRENS_DIEPTE-D);
+var r=eersteBereikt(rwsReeks,t0,doel);
+if(r===undefined){
+zetUiterste(uEl,null);
+info.textContent='Binnen de verwachting (tot '+lokDatum(rwsReeks[rwsReeks.length-1][0])+' '+lokTijd(rwsReeks[rwsReeks.length-1][0])+') stijgt de waterstand niet genoeg om '+GRENS_DIEPTE+' cm diepte te bereiken. Controleer zelf.';
+return;
+}
+r=Math.floor(r/60000)*60000;
+zetUiterste(uEl,r);
+info.textContent='Berekend voor '+lokDatum(r)+': de geul bereikt '+GRENS_DIEPTE+' cm bij een verwachte waterstand van '+Math.round(doel)+' cm NAP (op de doorwaadtijd '+Math.round(h0)+' cm NAP, dus +'+Math.round(doel-h0)+' cm). Bron: verwachting RWS '+(rwsStation||'')+', inclusief opzet en afwaaiing; aanname: de diepte volgt de waterstand 1 op 1. Controleer zelf.';
+}
+function doorwaadAlle(){Array.prototype.forEach.call(form.querySelectorAll('.geul-lijst[data-soort="diepte"] .geul-rij'),doorwaadRij);}
+
 function tijdschema(){
 var r=annuleerRadio();
 var onacc=['weer2','water2','groep2'].some(function(n){return gekozen(n)==='ONACCEPTABEL';})||gekozen('comm')==='Niet in orde'||gekozen('nood')==='Niet in orde';
-var diep=Array.prototype.some.call(form.querySelectorAll('[data-diep-hoog]'),function(c){return c.checked;});
+var diep=diepHoog();
 if((!passend.checked&&!geenGeul())||onacc||diep||zonderMotivering()||geulReserve().length)r.checked=true;else if(r.checked)r.checked=false;
 }
 function startBesluit(){
@@ -918,11 +998,12 @@ if(e&&e.target&&(e.target.hasAttribute('data-koppel')||e.target.hasAttribute('da
 var t=e&&e.target;
 if(t&&t.id==='knmi-soort'&&t.value){var ja0=form.querySelectorAll('input[name="knmi"]')[1];if(ja0)ja0.checked=true;}
 if(t&&(t.name==='knmi'||t.id==='knmi-soort'||t.hasAttribute('data-koppel')||t.hasAttribute('data-doel')||t.id==='zicht'||t.id==='neerslag'))weerRisico();
-if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-diep-hoog')||t.name==='uitwijk'))waterRisico();
+if(t&&(t.hasAttribute('data-diepte')||t.name==='uitwijk'))waterRisico();
+if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-doorwaad')||t===tochtDatum||t===vertrekEl))doorwaadAlle();
 if(t&&(t.name==='zwaarte'||t.name==='uitr'||(t.type==='checkbox'&&t.closest('td')===aandTd)))groepRisico();
 if(t&&(t.name==='weer2'||t.name==='water2'||t.name==='groep2'||t.name==='comm'||t.name==='nood'))onacceptabel();
 if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
-if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diep-hoog')||t.hasAttribute('data-diepte')||t.hasAttribute('data-tijd')))tijdschema();
+if(t&&(t===passend||t.hasAttribute('data-geengeul')||t.hasAttribute('data-diepte')||t.hasAttribute('data-tijd')||t.hasAttribute('data-uiterste-doorwaad')))tijdschema();
 if(t&&t.tagName==='TEXTAREA'){
 var was=t.dataset.leeg==='1';t.dataset.leeg=t.value.trim()===''?'1':'0';
 if(was&&t.dataset.leeg==='0'){var s2=['weer1','water1','groep1'].filter(function(n){return motTekst(n)===t;})[0];if(s2&&form.querySelectorAll('input[name="'+s2+'"]')[1].checked)tijdschema();}
@@ -952,6 +1033,7 @@ if(lw.length>=3){zet(lw[0],'-102');zet(lw[1],'Ameland, Nes');zet(lw[2],'13:57');
 try{localStorage.setItem(VKEY,'1');}catch(e){}
 status.textContent='Voorbeeldwaarden ingevuld (verwachting zondag 22 november, Ameland). Controleer ze vóór gebruik.';
 })();
+toonGeulen(geulenMetWaarde());
 startBesluit();
 koppelInit();
 function koppelInit(){controleer();}
@@ -978,6 +1060,7 @@ function isoDatum(d){return d.split('-').reverse().join('-');}
 function hhmm(d){return d.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});}
 function vul(st,l){zet(lw[0],String(l.cmNAP));zet(lw[1],NAMEN[st]);zet(lw[2],l.tijd);}
 function mislukt(st,reden){
+rwsReeks=null;rwsStation='';doorwaadAlle();
 keuzes.innerHTML='';
 uit.className='fout';
 uit.textContent='';
@@ -994,6 +1077,7 @@ function verwerk(st,d){
 keuzes.innerHTML='';
 zet(lw[1],NAMEN[st]);
 if(!d||!d.beschikbaar||!d.laagwaters||!d.laagwaters.length){mislukt(st,(d&&(d.fout||d.opmerking))||'antwoord bevat geen laagwaters');return;}
+rwsReeks=(d.reeks&&d.reeks.length)?d.reeks:null;rwsStation=NAMEN[st];doorwaadAlle();
 var info=' Verwachting Rijkswaterstaat inclusief opzet en afzwaaiing, ruw en niet gevalideerd; opgehaald om '+hhmm(new Date(d.opgehaald))+'. Controleer op waterinfo.rws.nl.';
 var gewenst=dat&&dat.value?dat.value:'';
 var kand=d.laagwaters.filter(function(l){return !gewenst||isoDatum(l.datum)===gewenst;});
@@ -1019,6 +1103,7 @@ function laad(){
 var st=sel.value;
 if(!st){melding('Kies eerst een meetstation.',true);return;}
 var nr=++teller;
+rwsReeks=null;rwsStation='';
 keuzes.innerHTML='';
 melding('Gegevens ophalen…',false);
 var ctl=('AbortController' in window)?new AbortController():null;
@@ -1163,7 +1248,7 @@ var REGELS=[
 'Hieronder staat het formulier zoals het nu is ingevuld. Elke regel is een veld met zijn waarde; "(leeg)" of "(geen keuze gemaakt)" betekent dat het nog niet is ingevuld.',
 'Je taak: signaleer wat een gids moet nalopen voordat hij vertrekt.',
 'Let op: 1) belangrijke ontbrekende gegevens; 2) tegenstrijdigheden, bijvoorbeeld een geulpassage of uiterste tijd die niet past bij laagwater, vertrek- en eindtijd of tijdschema; een verhoogd risico zonder motivering of maatregelen; een besluit dat niet past bij de ingevulde risico\'s of bij onvoldoende communicatie- of noodmiddelen; 3) waarden die onwaarschijnlijk of verkeerd ingevuld lijken.',
-'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Per geul geldt: reservetijd = uiterste tijd geulpassage min verwachte passagetijd; minder dan 30 minuten (of negatief) is een NO-GO.',
+'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Per geul geldt: reservetijd = de vroegste van de uiterste doorwaadtijd (geul 120 cm diep, berekend uit de verwachte waterstand) en de uiterste tijd geulpassage, min de verwachte doorwaadtijd; minder dan 30 minuten (of negatief) is een NO-GO.',
 'Regels: gebruik alleen wat in het formulier staat. Verzin geen weersverwachting, getijdetijden of feiten en zeg niet dat gegevens kloppen met officiële bronnen. Neem zelf geen go/no-go besluit en zeg niet dat de tocht veilig is. Als het formulier nog halverwege is ingevuld, noem dan alleen de belangrijkste ontbrekende punten.',
 'Uitvoer: Nederlands, platte tekst zonder opmaaktekens als sterretjes of hekjes. Gebruik maximaal drie kopjes in hoofdletters (ONTBREEKT, TEGENSTRIJDIG OF OPVALLEND, GEEN OPMERKINGEN) en korte regels die beginnen met "- ". Maximaal 12 regels in totaal. Sluit af met één zin dat de verantwoordelijkheid bij de vergunninghouder of verantwoordelijke gids blijft.'
 ].join('\n');
@@ -1198,6 +1283,7 @@ document.getElementById('nieuw').addEventListener('click',function(){
 if(!window.confirm('Alle ingevulde gegevens wissen en een nieuw formulier starten?'))return;
 try{localStorage.removeItem(KEY);}catch(e){}
 form.reset();
+toonGeulen(2);
 if(datum)datum.value=new Date().toLocaleDateString('sv-SE');
 textareas.forEach(function(x){x.dataset.leeg='1';});
 startBesluit();controleer();growAll();
