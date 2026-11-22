@@ -61,7 +61,8 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 .doorwaad input[type=number]{width:90px}
 .geul-meer{margin-top:8px}
 #reserve-advies{margin-top:10px;font-weight:bold}
-#reserve-advies.nogo{color:#8a1111;border:2px solid #cc2b2b;background:#fff4f4;padding:8px 10px}
+#reserve-advies.nogo{color:#8a1111}
+#knmi-soort{background:#f3f6f8}
 .aandachtspunten{gap:8px 15px;margin-bottom:8px}
 .anders-rij{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .anders-rij label{white-space:nowrap}
@@ -141,16 +142,10 @@ textarea{resize:none}
 <th scope="row">Vergunninghouder</th>
 <td class="stack">
 <select id="vergunninghouder">
-<option value="">Kies een vergunninghouder…</option>
-<option>Wadloopcentrum Fryslân</option>
-<option>Wadloopcentrum Pieterburen</option>
-<option>Dijkstra Wadlooptochten</option>
-<option>Wadloopvereniging Arenicola</option>
-<option>Fryske Waedrinners</option>
-<option>Vrije Wadlopers</option>
-<option>Anders</option>
+<option value="">Kies A-organisatie of zelfstandig gids…</option>
+<option>A-organisatie</option>
+<option>Zelfstandig gids</option>
 </select>
-<input type="text" id="vergunninghouder-anders" aria-label="Vergunninghouder, anders namelijk" placeholder="Namelijk..." hidden>
 </td>
 </tr>
 <tr>
@@ -189,8 +184,8 @@ textarea{resize:none}
 <td>
 <p>(n.v.t. solo-lopers)</p>
 <label class="veld">Gidsen <input type="number" min="0" data-gidsen></label>
-<label class="veld">Begeleiders <input type="number" min="0" data-begeleiders></label>
-<label style="display:block;margin-top:6px"><input type="checkbox" data-aangewezen> Geen begeleider: een deelnemer is aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident (alleen bij tot en met 12 deelnemers)</label>
+<label class="veld" id="begeleiders-label">Begeleiders <input type="number" min="0" data-begeleiders></label>
+<label style="display:block;margin-top:6px"><input type="checkbox" data-aangewezen> <span id="aangewezen-tekst">Geen begeleider: een deelnemer is aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident (alleen bij tot en met 12 deelnemers)</span></label>
 </td>
 </tr>
 <tr>
@@ -198,7 +193,7 @@ textarea{resize:none}
 <td>
 <input type="number" min="0" data-deelnemers>
 <small>(n.v.t. solo-lopers)</small>
-<p class="bewaar-info" style="margin:8px 0 0">Vergunningsvoorschrift: een tocht bestaat uit maximaal 60 deelnemers en 1 gids neemt maximaal 12 deelnemers (exclusief gids) mee. Tot en met 12 deelnemers: minimaal 1 gids en een begeleider (of een aangewezen en geïnstrueerde deelnemer). 13 t/m 24: minimaal 2 gidsen. 25 t/m 36: minimaal 2 gidsen en 1 begeleider. 37 t/m 60: minimaal 3 gidsen en 1 begeleider, of minimaal 2 gidsen en 2 begeleiders.</p>
+<p class="bewaar-info" id="gids-regels" style="margin:8px 0 0">Vergunningsvoorschrift voor A-organisaties: een tocht bestaat uit maximaal 60 deelnemers. Bij 1 gids zijn maximaal 12 deelnemers (exclusief gids) toegestaan; bij meer dan 12 deelnemers tellen ook de begeleiders mee. Tot en met 12 deelnemers: minimaal 1 gids en een begeleider (of een aangewezen en geïnstrueerde deelnemer). 13 t/m 24: minimaal 2 gidsen. 25 t/m 36: minimaal 2 gidsen en 1 begeleider. 37 t/m 60: minimaal 3 gidsen en 1 begeleider, of minimaal 2 gidsen en 2 begeleiders.</p>
 <div id="gids-waarschuwing" role="alert"></div>
 </td>
 </tr>
@@ -231,18 +226,8 @@ Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen
 <label><input type="radio" name="knmi"> Ja</label>
 </div>
 <div class="stack" style="margin-top:10px">
-<select id="knmi-soort" aria-label="Soort KNMI-waarschuwing">
-<option value="">Kies een waarschuwing…</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hitte">Hitte</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/kou">Kou</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zicht">Mist</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/onweersbuien">Onweersbuien</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/sneeuw-en-gladheid">Sneeuw</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/hozen">Waterhozen</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/windstoten">Windstoten</option>
-<option data-url="https://www.knmi.nl/kennis-en-datacentrum/waarschuwingen/zware-regen">Zware regen</option>
-</select>
-<a id="knmi-link" href="#" target="_blank" rel="noopener" style="color:var(--primary)" hidden></a>
+<input type="text" id="knmi-soort" readonly aria-label="Soort KNMI-waarschuwing (automatisch)" placeholder="Soort waarschuwing: wordt automatisch ingevuld uit de opgehaalde KNMI-gegevens">
+<a href="https://www.knmi.nl/nederland-nu/weer/waarschuwingen" target="_blank" rel="noopener" style="color:var(--primary)">KNMI-waarschuwingen op knmi.nl</a>
 </div>
 </td>
 </tr>
@@ -379,7 +364,7 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <th scope="row">Verwachte geuldiepten</th>
 <td>
 <div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
-<p style="margin:0 0 10px">Vul per geul de verwachte diepte op de verwachte doorwaadtijd in. Loopt het laagwater bij de geul later of eerder dan bij het meetstation, vul dan de reductie in minuten in (+ = later, − = eerder). De uiterste doorwaadtijd is het moment waarop de geul 120 cm diep wordt, berekend uit de verwachte waterstand van Rijkswaterstaat (inclusief opzet en afwaaiing) bij het meetstation hierboven. Reservetijd = uiterste doorwaadtijd min verwachte doorwaadtijd. Bij minder dan 30 minuten (of een negatieve reservetijd) is het advies NO-GO.</p>
+<p style="margin:0 0 10px">Vul per geul de verwachte diepte op de verwachte doorwaadtijd in. Loopt het laagwater bij de geul later of eerder dan bij het meetstation, vul dan de reductie in minuten in (+ = later, − = eerder). De uiterste doorwaadtijd is het moment waarop de geul 120 cm diep wordt, berekend uit de verwachte waterstand van Rijkswaterstaat (inclusief opzet en afwaaiing) bij het meetstation hierboven. Reservetijd = uiterste doorwaadtijd min verwachte doorwaadtijd. Bij minder dan 30 minuten (of een negatieve reservetijd) wordt de reservetijd rood weergegeven.</p>
 <div class="geul-lijst" data-soort="diepte">
 <div class="geul-rij"><span class="geul-label">Geul 1</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam">
@@ -445,84 +430,6 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 
 </table>
 
-<div class="go-nogo">
-
-<h2>3 | GO / NO-GO BESLUIT</h2>
-
-<div id="waarschuwing" role="alert"></div>
-
-<table>
-
-<tr>
-<th scope="row">Bronnen geraadpleegd</th>
-<td>
-<p>(<a href="https://www.knmi.nl/home" target="_blank" rel="noopener" style="color:var(--primary)">KNMI</a> / <a href="https://waterinfo.rws.nl/publiek/waterhoogte" target="_blank" rel="noopener" style="color:var(--primary)">RWS</a> / <a href="https://www.knmi.nl/nederland-nu/maritiem/marifoon" target="_blank" rel="noopener" style="color:var(--primary)">marifoonbericht</a> / lokale waarneming)</p>
-<div class="opties">
-<label><input type="radio" name="bron"> Ja</label>
-<label><input type="radio" name="bron"> Nee</label>
-</div>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Besluit</th>
-<td class="stack">
-<label><input type="radio" name="besluit"> TOCHT UITVOEREN</label>
-<label><input type="radio" name="besluit"> TOCHT ANNULEREN</label>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Toegepaste aanpassingen</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Motivering besluit</th>
-<td><textarea></textarea></td>
-</tr>
-
-<tr>
-<th scope="row">Naam beslisser / datum / tijdstip</th>
-<td>
-<div class="inline">
-<input type="text" placeholder="Naam" aria-label="Naam beslisser">
-<input type="date" aria-label="Datum besluit" data-vandaag>
-<input type="time" aria-label="Tijdstip besluit">
-</div>
-</td>
-</tr>
-
-</table>
-
-</div>
-
-<h2>4 | EVALUATIE NA AFLOOP</h2>
-
-<div class="instructions">
-Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incidenten en leerpunten die relevant zijn voor volgende tochten.
-</div>
-
-<table>
-
-<tr>
-<th scope="row">Bijzonderheden tijdens de tocht</th>
-<td>
-<p>Wat gebeurde er? Denk aan weer, waterstand, geulpassages, route, groep of materiaal.</p>
-<textarea></textarea>
-</td>
-</tr>
-
-<tr>
-<th scope="row">Geleerde lessen / verbeterpunten</th>
-<td>
-<p>Wat moet een volgende keer anders of extra worden gecontroleerd?</p>
-<textarea></textarea>
-</td>
-</tr>
-
-</table>
-
 <h2>TOELICHTING VOOR GIDSEN EN BEGELEIDERS</h2>
 
 <div class="footer-text">
@@ -531,8 +438,6 @@ Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incide
 <p>Wanneer een verhoogd risico wordt vastgesteld, kun je onder Opmerkingen vastleggen welke maatregelen zijn genomen. De opmerkingen worden automatisch voorgesteld; pas ze aan als je dat nodig vindt. Wis de tekst als je het voorstel opnieuw wilt laten invullen.</p>
 
 <p>Gebruik dit formulier als hulpmiddel bij je professionele afweging. Actuele omstandigheden in het veld, lokale kennis, getijdeninformatie, vergunningvoorschriften en aanwijzingen van bevoegde instanties blijven altijd leidend.</p>
-
-<p>Door bijzonderheden, incidenten en leerpunten na afloop vast te leggen, draagt dit formulier ook bij aan het lerend vermogen van gidsen en organisaties.</p>
 
 <p><strong>Gebruik van AI:</strong> Je kunt AI-ondersteuning gebruiken voor het verzamelen, verwerken en structureren van informatie en voor het signaleren van aandachtspunten. De verantwoordelijkheid voor de risicoanalyse blijft altijd bij de vergunninghouder of verantwoordelijke gids.</p>
 </div>
@@ -551,7 +456,7 @@ Kort invullen: noteer alleen afwijkingen, calamiteiten, incidenten, bijna-incide
 </div>
 
 <p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
-<p class="bewaar-info">Versie: 21-11-2026, 14</p>
+<p class="bewaar-info">Versie: 21-11-2026, 16</p>
 <div id="save-status" role="status" aria-live="polite"></div>
 
 </form>
@@ -563,7 +468,6 @@ window.addEventListener('error',function(e){var s=document.getElementById('save-
 var KEY='risicoanalyse-wadlooptocht';
 var form=document.querySelector('form');
 var status=document.getElementById('save-status');
-var waarschuwing=document.getElementById('waarschuwing');
 var rwsReeks=null,rwsStation='';
 var tochtDatum=form.querySelector('input[type=date]:not([data-vandaag])');
 var vertrekEl=form.querySelector('input[aria-label="Geplande vertrektijd"]');
@@ -623,9 +527,7 @@ var HERNOEM=[
 ['1 | WEER|Risico vóór maatregelen|','1 | WEER|Risico inschatting|'],
 ['1 | WEER|Motivering / maatregelen bij verhoogd risico|','1 | WEER|Opmerkingen|'],
 ['2 | WATER- EN ROUTECONDITIES|Risico vóór maatregelen|','2 | WATER- EN ROUTECONDITIES|Risico inschatting|'],
-['2 | WATER- EN ROUTECONDITIES|Motivering / maatregelen|','2 | WATER- EN ROUTECONDITIES|Opmerkingen|'],
-['6 | GO / NO-GO BESLUIT|','3 | GO / NO-GO BESLUIT|'],
-['7 | EVALUATIE NA AFLOOP|','4 | EVALUATIE NA AFLOOP|']
+['2 | WATER- EN ROUTECONDITIES|Motivering / maatregelen|','2 | WATER- EN ROUTECONDITIES|Opmerkingen|']
 ];
 function oudeSleutel(k){
 for(var i=0;i<HERNOEM.length;i++){if(k.indexOf(HERNOEM[i][1])===0)return HERNOEM[i][0]+k.slice(HERNOEM[i][1].length);}
@@ -655,9 +557,6 @@ fields.forEach(function(el,i){if(isCheck(el))el.checked=!!stored[i];else el.valu
 }catch(e){}
 if(hersteld)status.textContent='Eerder opgeslagen gegevens zijn hersteld.';
 
-/* 5. Standaard datum besluit = vandaag */
-var datum=form.querySelector('input[data-vandaag]');
-if(datum&&!datum.value)datum.value=new Date().toLocaleDateString('sv-SE');
 
 /* 6. Gekoppelde velden: getal vult vinkvak automatisch (handmatig aanpassen blijft mogelijk) */
 function box(n){return form.querySelector('[data-doel="'+n+'"]');}
@@ -678,20 +577,23 @@ var hoog=(ja&&slug(ja.closest('label').textContent)==='Ja')||box('bft-hoog').che
 if(hoog){var r=form.querySelectorAll('input[name="weer1"]')[1];if(r)r.checked=true;}
 }
 
-/* 6c. Water: bepaalde keuzes selecteren automatisch 'VERHOOGD' bij Risico vóór maatregelen */
+/* 6c. Water: Risico inschatting = VERHOOGD bij een geuldiepte boven 120 cm of een reservetijd onder 30 min, anders LAAG (zodra er geuldata is) */
 function waterRisico(){
-var diep=diepHoog();
-var uw=form.querySelector('input[name="uitwijk"]:checked');
-var geen=uw&&slug(uw.closest('label').textContent)==='Niet aanwezig';
-if(diep||geen){var r=form.querySelectorAll('input[name="water1"]')[1];if(r)r.checked=true;}
+if(geenGeul())return;
+var data=false,hoog=false;
+Array.prototype.forEach.call(geulRijen(),function(rij,i){
+var g=geulData(rij,i);
+if(g.D!==null){data=true;if(g.D>GRENS_DIEPTE)hoog=true;}
+if(g.r!==null){data=true;if(g.r<RESERVE_MIN)hoog=true;}
+});
+if(!data)return;
+var rd=form.querySelectorAll('input[name="water1"]');
+if(rd[hoog?1:0])rd[hoog?1:0].checked=true;
 }
 
-/* 6f. Besluit: TOCHT ANNULEREN wordt voorgesteld bij een NO-GO (reservetijd onder 30 min of geuldiepte vanaf 119 cm) */
-var autoAnnuleer=false;
-function annuleerRadio(){return form.querySelectorAll('input[name="besluit"]')[1];}
 function geenGeul(){return !!form.querySelector('[data-geengeul]:checked');}
 
-/* 6g. Reservetijd per geul = uiterste tijd geulpassage min verwachte passagetijd; onder 30 min (of negatief) = NO-GO */
+/* 6g. Reservetijd per geul = uiterste doorwaadtijd min verwachte doorwaadtijd; onder 30 min (of negatief) wordt rood getoond */
 var RESERVE_MIN=30;
 function naarMin(v){var m=/^(\d{1,2}):(\d{2})/.exec(v||'');return m?parseInt(m[1],10)*60+parseInt(m[2],10):null;}
 function geulRijen(){return form.querySelectorAll('.geul-lijst[data-soort="diepte"] .geul-rij');}
@@ -714,7 +616,7 @@ if(geen||g.r===null){out.textContent='';out.className='reserve-uit';return;}
 berekend++;
 if(g.r<RESERVE_MIN){
 nogo.push('Geul '+g.n+(g.naam?' ('+g.naam+')':''));
-out.textContent='Reservetijd: '+g.r+' min – NO-GO'+(g.r<0?' (na uiterste tijd)':' (minder dan '+RESERVE_MIN+' min)');
+out.textContent='Reservetijd: '+g.r+' min – '+(g.r<0?'na de uiterste doorwaadtijd':'minder dan '+RESERVE_MIN+' min');
 out.className='reserve-uit reserve-nogo';
 }else{
 out.textContent='Reservetijd: '+g.r+' min – voldoende';
@@ -722,7 +624,7 @@ out.className='reserve-uit reserve-ok';
 }
 });
 if(!advies)return nogo;
-if(nogo.length){advies.hidden=false;advies.className='nogo';advies.textContent='NO-GO: reservetijd is minder dan '+RESERVE_MIN+' minuten bij '+nogo.join(', ')+'.';}
+if(nogo.length){advies.hidden=false;advies.className='nogo';advies.textContent='Reservetijd is minder dan '+RESERVE_MIN+' minuten bij '+nogo.join(', ')+'.';}
 else if(berekend){advies.hidden=false;advies.className='';advies.textContent='Reservetijd is bij alle ingevulde geulen voldoende (minimaal '+RESERVE_MIN+' min).';}
 else{advies.hidden=true;advies.className='';advies.textContent='';}
 return nogo;
@@ -751,7 +653,6 @@ return max;
 Array.prototype.forEach.call(form.querySelectorAll('[data-geul-meer]'),function(b){b.addEventListener('click',function(){toonGeulen(geulAantal+1);});});
 /* 6i. Uiterste doorwaadtijd per geul: moment waarop de geul 120 cm diep wordt, uit de verwachte waterstand (RWS, incl. opzet en afwaaiing) */
 var GRENS_DIEPTE=120;
-function diepHoog(){return Array.prototype.some.call(form.querySelectorAll('[data-diepte]'),function(d){var v=parseFloat(d.value);return !isNaN(v)&&v>=119;});}
 function hoogteBij(reeks,t){
 if(!reeks.length||t<reeks[0][0]||t>reeks[reeks.length-1][0])return null;
 for(var i=1;i<reeks.length;i++){
@@ -866,7 +767,7 @@ if(!items.length){beide('Vul per geul de verwachte diepte en doorwaadtijd in en 
 var naamVan=function(g){return 'geul '+g.n+(g.naam?' ('+g.naam+')':'');};
 /* Point of no return */
 var nogo=items.filter(function(x){return x.r<RESERVE_MIN;})[0];
-if(nogo){pI.textContent='Bij '+naamVan(nogo)+' is de reservetijd '+nogo.r+' min (minder dan '+RESERVE_MIN+' min, NO-GO): een point of no return is dan niet te bepalen.'+overTxt;}
+if(nogo){pI.textContent='Bij '+naamVan(nogo)+' is de reservetijd '+nogo.r+' min (minder dan '+RESERVE_MIN+' min): een point of no return is dan niet te bepalen.'+overTxt;}
 else{
 var kritiek=items.reduce(function(a,b){return (b.t+(b.r-RESERVE_MIN)*30000<a.t+(a.r-RESERVE_MIN)*30000)?b:a;});
 var pnr=Math.floor((kritiek.t+(kritiek.r-RESERVE_MIN)*30000)/60000)*60000;
@@ -885,16 +786,30 @@ var rmin=items.reduce(function(a,b){return b.r<a.r?b:a;});
 var delta=rmin.r-RESERVE_MIN;
 var vmax=absTijd(vertrekEl.value)+delta*60000;
 vU.value=lokTijd(vmax);
-vI.textContent=(delta<0?'LET OP: bij de geplande vertrektijd is de reservetijd bij '+naamVan(rmin)+' al '+(-delta)+' min te klein (NO-GO). ':'')+'Uiterlijk vertrekken om '+lokTijd(vmax)+' ('+(delta>=0?delta+' min na':(-delta)+' min vóór')+' de geplande vertrektijd): bij later vertrek komt de reservetijd bij '+naamVan(rmin)+' onder de '+RESERVE_MIN+' min. Aanname: alle doorwaadtijden schuiven even veel op met de vertrektijd.'+overTxt;
+vI.textContent=(delta<0?'LET OP: bij de geplande vertrektijd is de reservetijd bij '+naamVan(rmin)+' al '+(-delta)+' min te klein (reservetijd minder dan '+RESERVE_MIN+' min). ':'')+'Uiterlijk vertrekken om '+lokTijd(vmax)+' ('+(delta>=0?delta+' min na':(-delta)+' min vóór')+' de geplande vertrektijd): bij later vertrek komt de reservetijd bij '+naamVan(rmin)+' onder de '+RESERVE_MIN+' min. Aanname: alle doorwaadtijden schuiven even veel op met de vertrektijd.'+overTxt;
 }
 
-/* 6k. Vergunningsvoorschrift: aantal gidsen, begeleiders en deelnemers */
+/* 6k. Aantal gidsen, begeleiders en deelnemers: de regels hangen af van het type vergunninghouder */
+var REGELS_A='Vergunningsvoorschrift voor A-organisaties: een tocht bestaat uit maximaal 60 deelnemers. Bij 1 gids zijn maximaal 12 deelnemers (exclusief gids) toegestaan; bij meer dan 12 deelnemers tellen ook de begeleiders mee. Tot en met 12 deelnemers: minimaal 1 gids en een begeleider (of een aangewezen en geïnstrueerde deelnemer). 13 t/m 24: minimaal 2 gidsen. 25 t/m 36: minimaal 2 gidsen en 1 begeleider. 37 t/m 60: minimaal 3 gidsen en 1 begeleider, of minimaal 2 gidsen en 2 begeleiders.';
+var REGELS_ZELF='Zelfstandig gids: maximaal 12 deelnemers per gids (exclusief gids). Eén deelnemer wordt als begeleider aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident.';
+var REGELS_GEEN='Kies A-organisatie of zelfstandig gids bij vergunninghouder: de controle op het aantal gidsen, begeleiders en deelnemers hangt daarvan af.';
 function gidsControle(){
 var gEl=form.querySelector('[data-gidsen]'),bEl=form.querySelector('[data-begeleiders]'),dEl=form.querySelector('[data-deelnemers]'),aEl=form.querySelector('[data-aangewezen]'),uit=document.getElementById('gids-waarschuwing');
+var vh=document.getElementById('vergunninghouder').value,zelf=vh==='Zelfstandig gids',aorg=vh==='A-organisatie';
+var regels=document.getElementById('gids-regels'),bLabel=document.getElementById('begeleiders-label'),aTekst=document.getElementById('aangewezen-tekst');
+if(regels)regels.textContent=zelf?REGELS_ZELF:(aorg?REGELS_A:REGELS_GEEN);
+if(bLabel)bLabel.hidden=zelf;
+if(aTekst)aTekst.textContent=zelf?'Een deelnemer is als begeleider aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident':'Geen begeleider: een deelnemer is aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident (alleen bij tot en met 12 deelnemers)';
 var p=[];
 if(gEl&&bEl&&dEl&&aEl){
 var g=parseInt(gEl.value,10)||0,b=parseInt(bEl.value,10)||0,n=parseInt(dEl.value,10);
 if(!isNaN(n)&&n>0){
+var meer=function(){return 'Eén gids mag maximaal 12 deelnemers (exclusief gids) meenemen: bij '+g+' '+(g===1?'gids':'gidsen')+' maximaal '+12*g+' deelnemers (nu '+n+').';};
+if(zelf){
+if(g<1)p.push('Een zelfstandig gids moet de tocht zelf leiden: vul minimaal 1 gids in.');
+else if(n>12*g)p.push(meer());
+if(!aEl.checked)p.push('Bij een zelfstandig gids moet 1 deelnemer als begeleider worden aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident (vink dit aan).');
+}else if(aorg){
 var nu=' (nu '+g+' '+(g===1?'gids':'gidsen')+' en '+b+' '+(b===1?'begeleider':'begeleiders')+')';
 if(n>60)p.push('Een tocht mag uit maximaal 60 deelnemers bestaan (nu '+n+').');
 if(g<1)p.push('Elke groep moet door minimaal 1 gids worden begeleid.');
@@ -902,10 +817,10 @@ else if(n<=12){if(b<1&&!aEl.checked)p.push('Tot en met 12 deelnemers moet naast 
 else if(n<=24){if(g<2)p.push('Een groep van 13 tot en met 24 deelnemers moet door minimaal 2 gidsen worden begeleid'+nu+'.');}
 else if(n<=36){if(g<2||b<1)p.push('Een groep van 25 tot en met 36 deelnemers moet door minimaal 2 gidsen en 1 begeleider worden begeleid'+nu+'.');}
 else if(n<=60){if(!((g>=3&&b>=1)||(g>=2&&b>=2)))p.push('Een groep van 37 tot en met 60 deelnemers moet door minimaal 3 gidsen en 1 begeleider, of minimaal 2 gidsen en 2 begeleiders worden begeleid'+nu+'.');}
-if(g>=1&&n>12*g)p.push('Eén gids mag maximaal 12 deelnemers (exclusief gids) meenemen: bij '+g+' '+(g===1?'gids':'gidsen')+' maximaal '+12*g+' deelnemers (nu '+n+').');
 }
 }
-if(uit){uit.className=p.length?'zichtbaar':'';uit.innerHTML=p.length?'Let op: dit voldoet niet aan het vergunningsvoorschrift:<ul>'+p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>':'';}
+}
+if(uit){uit.className=p.length?'zichtbaar':'';uit.innerHTML=p.length?'Let op: dit voldoet niet aan het voorschrift:<ul>'+p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>':'';}
 return p;
 }
 
@@ -939,8 +854,13 @@ if(koud&&((bft!==null&&bft>=4)||nat||koudWater))r.push('Combinatie van kou met w
 if(zicht==='beperkt'||zicht==='slecht')r.push('Zicht is '+zicht+': oriëntatie, tijdbewaking en overzicht over de groep zijn lastiger. Vergunningsvoorschriften aangaande mist zijn leidend.');
 else if(nsl==='mist')r.push('Mist: oriëntatie en overzicht over de groep zijn lastig. Vergunningsvoorschriften aangaande mist zijn leidend.');
 if(nsl==='regen'||nsl==='sneeuw'||nsl==='ijs')r.push('Neerslag ('+nsl+'): natte kleding, extra afkoeling en minder zicht.');
-if(knmi&&(soort==='Onweersbuien'||soort==='Waterhozen'))r.push('KNMI-waarschuwing '+soort.toLowerCase()+': levensgevaarlijk op open wad. Vergunningsvoorschriften aangaande onweer zijn leidend.');
-else if(knmi)r.push('KNMI-waarschuwing actief'+(soort?' ('+soort.toLowerCase()+')':'')+': raadpleeg de waarschuwing en volg de vergunning en lokale afspraken.');
+if(knmi){
+var extra=[];
+if(/mist/i.test(soort))extra.push('Vergunningsvoorschriften aangaande mist zijn leidend.');
+if(/onweer|waterhoos|waterhozen/i.test(soort))extra.push('Onweer en waterhozen zijn levensgevaarlijk op open wad; vergunningsvoorschriften aangaande onweer zijn leidend.');
+if(!extra.length)extra.push('Raadpleeg de waarschuwing en volg de vergunning en lokale afspraken.');
+r.push('KNMI-waarschuwing op de route'+(soort?': '+soort:'')+'. '+extra.join(' '));
+}
 if(ver.indexOf('draaiende wind')>-1)r.push('Draaiende wind: de windrichting verandert tijdens de tocht, met invloed op opzet, stroming en koers.');
 if(ver.indexOf('windtoename')>-1)r.push('Windtoename tijdens de tocht: het weer wordt tijdens de tocht slechter dan bij vertrek (snel veranderend weer).');
 if(ver.indexOf('afkoeling')>-1)r.push('Afkoeling tijdens de tocht: het onderkoelingsrisico neemt tijdens de tocht toe.');
@@ -975,7 +895,7 @@ if(g.D>=GRENS_DIEPTE)r.push(nm+': verwachte diepte van '+g.D+' cm is al 120 cm o
 else if(g.D>=100)r.push(nm+': verwachte diepte '+g.D+' cm, dicht bij de grens van 120 cm.');
 }
 if(g.r!==null){
-if(g.r<RESERVE_MIN)r.push(nm+': reservetijd '+g.r+' min tot de uiterste doorwaadtijd, minder dan '+RESERVE_MIN+' min: NO-GO.');
+if(g.r<RESERVE_MIN)r.push(nm+': reservetijd '+g.r+' min tot de uiterste doorwaadtijd, minder dan '+RESERVE_MIN+' min.');
 else if(g.r<60)r.push(nm+': beperkte tijdsmarge ('+g.r+' min tot de uiterste doorwaadtijd): bij een kleine vertraging wordt de geul te diep.');
 }else r.push(nm+': tijdsmarge niet te bepalen (verwachte of uiterste doorwaadtijd ontbreekt).');
 });
@@ -996,34 +916,14 @@ zetAuto(form.querySelector('textarea[data-auto="weer"]'),'weer',weerOpmerkingen(
 zetAuto(form.querySelector('textarea[data-auto="water"]'),'water',waterOpmerkingen());
 }
 
-function tijdschema(){
-var r=annuleerRadio();
-if(diepHoog()||geulReserve().length){if(!r.checked){r.checked=true;autoAnnuleer=true;}}
-else if(r.checked&&autoAnnuleer){r.checked=false;autoAnnuleer=false;}
-}
-function startBesluit(){
-if(!form.querySelector('input[name="besluit"]:checked')&&(diepHoog()||geulReserve().length)){annuleerRadio().checked=true;autoAnnuleer=true;}
-}
-
-/* 7. Waarschuwing bij 'TOCHT UITVOEREN' met openstaande problemen */
+/* 7. Controles bij elke wijziging */
 function gekozen(name){var r=form.querySelector('input[name="'+name+'"]:checked');return r?slug(r.closest('label').textContent):'';}
 function controleer(){
 tijdberekeningen();
-var gidsP=gidsControle();
+gidsControle();
+geulReserve();
 var rs=document.getElementById('route');
-var ks=document.getElementById('knmi-soort'),kl=document.getElementById('knmi-link');
-var ku=ks.options[ks.selectedIndex]&&ks.options[ks.selectedIndex].getAttribute('data-url');
-kl.hidden=!ku;
-if(ku){kl.href=ku;kl.textContent='Meer informatie over '+ks.value+' op knmi.nl';}
 document.getElementById('route-anders').hidden=rs.value!=='Anders';
-var vh=document.getElementById('vergunninghouder');
-document.getElementById('vergunninghouder-anders').hidden=vh.value!=='Anders';
-var p=gidsP.slice();
-if(geulReserve().length)p.push('Geulpassage: reservetijd is minder dan '+RESERVE_MIN+' minuten (NO-GO).');
-if(gekozen('bron')==='Nee')p.push('Bronnen zijn niet geraadpleegd.');
-var tonen=gekozen('besluit')==='TOCHT UITVOEREN'&&p.length>0;
-waarschuwing.className=tonen?'zichtbaar':'';
-waarschuwing.innerHTML=tonen?'Let op: besluit is TOCHT UITVOEREN, maar er staan punten open:<ul>'+p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>':'';
 autoOpmerkingen();
 }
 
@@ -1032,12 +932,10 @@ function wijziging(e){
 var t=e&&e.target;
 if(t&&t.tagName==='TEXTAREA')grow(t);
 if(t&&(t.hasAttribute('data-koppel')||t.hasAttribute('data-diepte')))koppel();
-if(t&&t.id==='knmi-soort'&&t.value){var ja0=form.querySelectorAll('input[name="knmi"]')[1];if(ja0)ja0.checked=true;}
-if(t&&(t.name==='knmi'||t.id==='knmi-soort'||t.hasAttribute('data-koppel')||t.hasAttribute('data-doel')||t.id==='zicht'||t.id==='neerslag'))weerRisico();
-if(t&&(t.hasAttribute('data-diepte')||t.name==='uitwijk'))waterRisico();
+if(t&&(t.name==='knmi'||t.hasAttribute('data-koppel')||t.hasAttribute('data-doel')||t.id==='zicht'||t.id==='neerslag'))weerRisico();
+if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-doorwaad')||t.hasAttribute('data-uiterste-doorwaad')||t.hasAttribute('data-geengeul')))waterRisico();
 if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-doorwaad')||t.hasAttribute('data-reductie')||t.hasAttribute('data-diepte-tijd')||t===tochtDatum||t===vertrekEl))doorwaadAlle();
 if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
-if(t&&(t.hasAttribute('data-geengeul')||t.hasAttribute('data-diepte')||t.hasAttribute('data-tijd')||t.hasAttribute('data-uiterste-doorwaad')))tijdschema();
 controleer();
 clearTimeout(timer);timer=setTimeout(function(){save('Automatisch opgeslagen');},600);
 }
@@ -1063,7 +961,6 @@ try{localStorage.setItem(VKEY,'1');}catch(e){}
 status.textContent='Voorbeeldwaarden ingevuld (verwachting zondag 22 november, Ameland). Controleer ze vóór gebruik.';
 })();
 toonGeulen(geulenMetWaarde());
-startBesluit();
 koppelInit();
 function koppelInit(){controleer();}
 textareas.forEach(function(x){x.dataset.leeg=x.value.trim()===''?'1':'0';});
@@ -1217,11 +1114,15 @@ echte.forEach(function(x){regel(tekst(x),'fout');});
 mogelijk.forEach(function(x){regel('Mogelijk gevaarlijk weer (nog geen waarschuwing): '+tekst(x).replace('KNMI code ','code '));});
 if(echte.length){
 zetRadio(radios[1]);
-if(!zetKeuze(soortEl,echte[0].soort))regel('Soort waarschuwing "'+echte[0].soort+'" staat niet in de keuzelijst; kies zelf de soort.','fout');
+var soorten=[];
+echte.forEach(function(x){var t=x.soort+' (code '+(KLEUR[x.kleur]||x.kleur)+', '+x.van.tijd+' tot '+x.tot.tijd+')';if(soorten.indexOf(t)<0)soorten.push(t);});
+zetIn(soortEl,soorten.join('; '));
 }else{
 regel('Geen actieve KNMI-waarschuwing op Lauwersoog in dit tijdvenster ('+stand+').');
 var gekozen=form.querySelector('input[name="knmi"]:checked');
-if(!gekozen||gekozen===radios[0])zetRadio(radios[0]);
+var autoJa=gekozen===radios[1]&&soortEl&&soortEl.value!=='';
+if(!gekozen||gekozen===radios[0]||autoJa){zetRadio(radios[0]);zetIn(soortEl,'');}
+else regel('Let op: bij KNMI-waarschuwing op route staat "Ja", maar de opgehaalde gegevens tonen geen waarschuwing op Lauwersoog.','fout');
 }
 w.inRegio.slice(0,5).forEach(function(x){regel('Elders in de regio: '+tekst(x));});
 }
@@ -1316,12 +1217,12 @@ return out.join('\n');
 }
 
 var REGELS=[
-'Je bent een tweede paar ogen bij een Nederlandse risicoanalyse voor een wadlooptocht (praktisch beslisformulier met onderdelen Tochtgegevens, Weer, Water- en routecondities, Go/No-go besluit en Evaluatie; het formulier is een hulpmiddel voor een risico-inschatting en geen handhavingsdocument).',
+'Je bent een tweede paar ogen bij een Nederlandse risicoanalyse voor een wadlooptocht (formulier met onderdelen Tochtgegevens, Weer en Water- en routecondities; het formulier is bedoeld om snel gegevens op te halen en een risico-inschatting te maken, en is geen handhavingsdocument).',
 'Hieronder staat het formulier zoals het nu is ingevuld. Elke regel is een veld met zijn waarde; "(leeg)" of "(geen keuze gemaakt)" betekent dat het nog niet is ingevuld.',
 'Je taak: signaleer wat een gids moet nalopen voordat hij vertrekt.',
-'Let op: 1) belangrijke ontbrekende gegevens; 2) tegenstrijdigheden, bijvoorbeeld een geulpassage of uiterste tijd die niet past bij laagwater, vertrek- en eindtijd of tijdschema; een verhoogd risico zonder motivering of maatregelen; een besluit dat niet past bij de ingevulde risico\'s of bij onvoldoende communicatie- of noodmiddelen; 3) waarden die onwaarschijnlijk of verkeerd ingevuld lijken.',
-'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Voor het aantal gidsen, begeleiders en deelnemers geldt het vergunningsvoorschrift dat in het formulier staat. Per geul geldt (de diepte is de verwachte diepte op de verwachte doorwaadtijd): reservetijd = uiterste doorwaadtijd (geul 120 cm diep, berekend uit de verwachte waterstand) min de verwachte doorwaadtijd; minder dan 30 minuten (of negatief) is een NO-GO.',
-'Regels: gebruik alleen wat in het formulier staat. Verzin geen weersverwachting, getijdetijden of feiten en zeg niet dat gegevens kloppen met officiële bronnen. Neem zelf geen go/no-go besluit en zeg niet dat de tocht veilig is. Als het formulier nog halverwege is ingevuld, noem dan alleen de belangrijkste ontbrekende punten.',
+'Let op: 1) belangrijke ontbrekende gegevens; 2) tegenstrijdigheden, bijvoorbeeld een uiterste doorwaadtijd, point of no return of vertrektijd die niet past bij laagwater, vertrek- en eindtijd of de ingevulde geuldiepten; een aantal gidsen, begeleiders en deelnemers dat niet past bij het type vergunninghouder; 3) waarden die onwaarschijnlijk of verkeerd ingevuld lijken.',
+'Het formulier zelf rekent met deze drempels: windkracht boven 5 Bft, temperatuur of gevoelstemperatuur onder 10 of boven 25 °C, watertemperatuur onder 10 °C en geuldiepte vanaf 119 cm gelden als verhoogd risico. Voor het aantal gidsen, begeleiders en deelnemers gelden de regels die in het formulier staan, afhankelijk van of de vergunninghouder een A-organisatie of een zelfstandig gids is. Het water-risico is VERHOOGD bij een geuldiepte boven 120 cm of een reservetijd onder 30 minuten. Per geul geldt (de diepte is de verwachte diepte op de verwachte doorwaadtijd): reservetijd = uiterste doorwaadtijd (geul 120 cm diep, berekend uit de verwachte waterstand) min de verwachte doorwaadtijd; minder dan 30 minuten (of negatief) is een onvoldoende marge.',
+'Regels: gebruik alleen wat in het formulier staat. Verzin geen weersverwachting, getijdetijden of feiten en zeg niet dat gegevens kloppen met officiële bronnen. Neem zelf geen besluit over de tocht en zeg niet dat de tocht veilig is. Als het formulier nog halverwege is ingevuld, noem dan alleen de belangrijkste ontbrekende punten.',
 'Uitvoer: Nederlands, platte tekst zonder opmaaktekens als sterretjes of hekjes. Gebruik maximaal drie kopjes in hoofdletters (ONTBREEKT, TEGENSTRIJDIG OF OPVALLEND, GEEN OPMERKINGEN) en korte regels die beginnen met "- ". Maximaal 12 regels in totaal. Sluit af met één zin dat de verantwoordelijkheid bij de vergunninghouder of verantwoordelijke gids blijft.'
 ].join('\n');
 
@@ -1357,9 +1258,8 @@ try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'-auto');}catch(e){
 lastAuto={};
 form.reset();
 toonGeulen(2);
-if(datum)datum.value=new Date().toLocaleDateString('sv-SE');
 textareas.forEach(function(x){x.dataset.leeg='1';});
-startBesluit();controleer();growAll();
+controleer();growAll();
 status.textContent='Nieuw formulier gestart.';
 window.scrollTo({top:0});
 });
