@@ -138,7 +138,7 @@ textarea{resize:none}
 <h2>WERKWIJZE</h2>
 
 <div class="instructions">
-Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen. Het formulier maakt een inschatting van het risico per onderdeel en vat de belangrijkste risico’s samen onder Opmerkingen. Het is een hulpmiddel voor de risico-inschatting en geen handhavingsdocument: verwerk de groepskenmerken zelf in het tijdschema en de route. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
+Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen. Het formulier maakt een inschatting van het risico per onderdeel en vat de belangrijkste risico’s samen onder Opmerkingen. Het is een hulpmiddel voor de risico-inschatting: verwerk de groepskenmerken zelf in het tijdschema en de route. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
 </div>
 
 <h2>0 | TOCHTGEGEVENS</h2>
@@ -289,6 +289,17 @@ Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen
 <option>volledig zon onder</option>
 <option>gedeeld zon op/onder</option>
 </select>
+</td>
+</tr>
+
+<tr>
+<th scope="row">Zon op / zon onder (berekend)</th>
+<td>
+<div class="opties">
+<label class="veld">Zon op <input type="text" id="zon-op" readonly aria-label="Berekende tijd van zonsopkomst"></label>
+<label class="veld">Zon onder <input type="text" id="zon-onder" readonly aria-label="Berekende tijd van zonsondergang"></label>
+</div>
+<div id="zon-info" class="dw-info" aria-live="polite"></div>
 </td>
 </tr>
 
@@ -572,8 +583,8 @@ if(w.length)box('water-laag').checked=w[0]<10;
 function weerRisico(){
 var ja=form.querySelector('input[name="knmi"]:checked');
 var zicht=document.getElementById('zicht').value,nsl=document.getElementById('neerslag').value;
-var hoog=(ja&&slug(ja.closest('label').textContent)==='Ja')||box('bft-hoog').checked||box('temp-laag').checked||box('temp-hoog').checked||box('water-laag').checked||
-['beperkt','slecht','volledig zon onder'].indexOf(zicht)>-1||['mist','regen','sneeuw','ijs'].indexOf(nsl)>-1;
+var hoog=zonStatus.donker||(ja&&slug(ja.closest('label').textContent)==='Ja')||box('bft-hoog').checked||box('temp-laag').checked||box('temp-hoog').checked||box('water-laag').checked||
+['beperkt','slecht','volledig zon onder','gedeeld zon op/onder'].indexOf(zicht)>-1||['mist','regen','sneeuw','ijs'].indexOf(nsl)>-1;
 if(hoog){var r=form.querySelectorAll('input[name="weer1"]')[1];if(r)r.checked=true;}
 }
 
@@ -789,6 +800,64 @@ vU.value=lokTijd(vmax);
 vI.textContent=(delta<0?'LET OP: bij de geplande vertrektijd is de reservetijd bij '+naamVan(rmin)+' al '+(-delta)+' min te klein (reservetijd minder dan '+RESERVE_MIN+' min). ':'')+'Uiterlijk vertrekken om '+lokTijd(vmax)+' ('+(delta>=0?delta+' min na':(-delta)+' min vóór')+' de geplande vertrektijd): bij later vertrek komt de reservetijd bij '+naamVan(rmin)+' onder de '+RESERVE_MIN+' min. Aanname: alle doorwaadtijden schuiven even veel op met de vertrektijd.'+overTxt;
 }
 
+/* 6m. Zon op en zon onder (berekend voor Lauwersoog) en de invloed op zicht en weerrisico */
+var ZON_LAT=53.41,ZON_LON=6.20;
+var zonStatus={donker:false,volledig:false,tekst:'',zonOp:'',zonOnder:''};
+var zonZichtAuto=null;
+var eindEl=form.querySelector('input[aria-label="Geplande eindtijd"]');
+function zonUtc(y,m,d,opkomst){
+var R=Math.PI/180;
+var N=Math.floor(275*m/9)-Math.floor((m+9)/12)*(1+Math.floor((y-4*Math.floor(y/4)+2)/3))+d-30;
+var lh=ZON_LON/15,t=N+((opkomst?6:18)-lh)/24;
+var M=0.9856*t-3.289;
+var L=(M+1.916*Math.sin(M*R)+0.020*Math.sin(2*M*R)+282.634)%360;if(L<0)L+=360;
+var RA=Math.atan(0.91764*Math.tan(L*R))/R;RA=((RA%360)+360)%360;
+RA+=(Math.floor(L/90)*90)-(Math.floor(RA/90)*90);RA/=15;
+var sinDec=0.39782*Math.sin(L*R),cosDec=Math.cos(Math.asin(sinDec));
+var cosH=(Math.cos(90.833*R)-sinDec*Math.sin(ZON_LAT*R))/(cosDec*Math.cos(ZON_LAT*R));
+if(cosH>1||cosH<-1)return null;
+var H=(opkomst?360-Math.acos(cosH)/R:Math.acos(cosH)/R)/15;
+var T=H+RA-0.06571*t-6.622;
+var UT=((T-lh)%24+24)%24;
+return Date.UTC(y,m-1,d)+UT*3600000;
+}
+function zonDag(datum,offset){
+var p=datum.split('-'),dt=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+offset));
+var y=dt.getUTCFullYear(),m=dt.getUTCMonth()+1,d=dt.getUTCDate();
+return {op:zonUtc(y,m,d,true),onder:zonUtc(y,m,d,false)};
+}
+function zonBerekening(){
+var opEl=document.getElementById('zon-op'),onEl=document.getElementById('zon-onder'),info=document.getElementById('zon-info'),zichtEl=document.getElementById('zicht');
+if(!opEl||!onEl||!info)return;
+zonStatus={donker:false,volledig:false,tekst:'',zonOp:'',zonOnder:''};
+function leeg(t){opEl.value='';onEl.value='';info.textContent=t;zichtAuto(null);}
+function zichtAuto(doel){
+if(!zichtEl)return;
+if(doel!==null){if(zichtEl.value===''||zichtEl.value===zonZichtAuto){zichtEl.value=doel;zonZichtAuto=doel;}}
+else if(zonZichtAuto!==null&&zichtEl.value===zonZichtAuto){zichtEl.value='';zonZichtAuto=null;}
+}
+if(!tochtDatum||!tochtDatum.value){leeg('Vul eerst de datum in bij 0 | Tochtgegevens.');return;}
+var ev={'-1':zonDag(tochtDatum.value,-1),'0':zonDag(tochtDatum.value,0),'1':zonDag(tochtDatum.value,1)};
+var e0=ev['0'];
+if(e0.op===null||e0.onder===null){leeg('Zon op en zon onder zijn voor deze datum niet te berekenen.');return;}
+opEl.value=lokTijd(e0.op);onEl.value=lokTijd(e0.onder);
+zonStatus.zonOp=opEl.value;zonStatus.zonOnder=onEl.value;
+var basis='Berekend voor Lauwersoog op '+tochtDatum.value.split('-').reverse().join('-')+': zon op '+opEl.value+', zon onder '+onEl.value+' (nauwkeurig tot ongeveer 1 minuut; op het wad is er nog ongeveer 30 minuten schemering voor zon op en na zon onder).';
+if(!vertrekEl||!vertrekEl.value||!eindEl||!eindEl.value){info.textContent=basis+' Vul de geplande vertrek- en eindtijd in om te bepalen of een deel van de tocht in het donker valt.';zichtAuto(null);return;}
+var van=amsNaarUtcHoofd(tochtDatum.value,vertrekEl.value),tot=amsNaarUtcHoofd(tochtDatum.value,eindEl.value);
+if(tot<=van)tot+=24*3600000;
+var donker=[[ev['-1'].onder,e0.op],[e0.onder,ev['1'].op]];
+var overlap=0;
+donker.forEach(function(iv){if(iv[0]===null||iv[1]===null)return;overlap+=Math.max(0,Math.min(tot,iv[1])-Math.max(van,iv[0]));});
+var min=Math.round(overlap/60000),duur=Math.round((tot-van)/60000);
+if(min<=0){info.textContent=basis+' De tocht ('+lokTijd(van)+' tot '+lokTijd(tot)+') valt volledig in daglicht.';zichtAuto(null);return;}
+var volledig=min>=duur-1;
+zonStatus.donker=true;zonStatus.volledig=volledig;
+zonStatus.tekst=volledig?'De hele tocht ('+lokTijd(van)+' tot '+lokTijd(tot)+') valt na zon onder of voor zon op (zon onder '+zonStatus.zonOnder+', zon op '+zonStatus.zonOp+').':'Een deel van de tocht ('+min+' van de '+duur+' min) valt na zon onder of voor zon op (zon onder '+zonStatus.zonOnder+', zon op '+zonStatus.zonOp+').';
+info.textContent=basis+' LET OP: '+zonStatus.tekst+' Het weerrisico staat daardoor op VERHOOGD.';
+zichtAuto(volledig?'volledig zon onder':'gedeeld zon op/onder');
+}
+
 /* 6k. Aantal gidsen, begeleiders en deelnemers: de regels hangen af van het type vergunninghouder */
 var REGELS_A='Vergunningsvoorschrift voor A-organisaties: een tocht bestaat uit maximaal 60 deelnemers. Bij 1 gids zijn maximaal 12 deelnemers (exclusief gids) toegestaan; bij meer dan 12 deelnemers tellen ook de begeleiders mee. Tot en met 12 deelnemers: minimaal 1 gids en een begeleider (of een aangewezen en geïnstrueerde deelnemer). 13 t/m 24: minimaal 2 gidsen. 25 t/m 36: minimaal 2 gidsen en 1 begeleider. 37 t/m 60: minimaal 3 gidsen en 1 begeleider, of minimaal 2 gidsen en 2 begeleiders.';
 var REGELS_ZELF='Zelfstandig gids: maximaal 12 deelnemers per gids (exclusief gids). Eén deelnemer wordt als begeleider aangewezen en geïnstrueerd hoe te handelen bij een calamiteit of incident.';
@@ -842,7 +911,7 @@ var bft=getal(bftEl),t1=getal(tempEls[0]),t2=getal(tempEls[1]),tw=getal(watEl);
 var zicht=document.getElementById('zicht').value,nsl=document.getElementById('neerslag').value,richting=windSel?windSel.value:'';
 var knmi=gekozen('knmi')==='Ja',soort=document.getElementById('knmi-soort').value;
 var ver=((verEl&&verEl.value)||'').toLowerCase();
-if(bft===null&&t1===null&&t2===null&&tw===null&&!zicht&&!nsl&&!knmi&&!ver)return '';
+if(bft===null&&t1===null&&t2===null&&tw===null&&!zicht&&!nsl&&!knmi&&!ver&&!zonStatus.donker)return '';
 var koud=[t1,t2].some(function(x){return x!==null&&x<10;}),warm=[t1,t2].some(function(x){return x!==null&&x>25;});
 var nat=['regen','sneeuw','ijs'].indexOf(nsl)>-1,koudWater=tw!==null&&tw<10;
 var r=[];
@@ -853,6 +922,7 @@ if(koudWater)r.push('Koud water ('+tw+' °C): risico op snelle onderkoeling bij 
 if(koud&&((bft!==null&&bft>=4)||nat||koudWater))r.push('Combinatie van kou met wind en/of natte kleding of koud water: het onderkoelingsrisico is dan aanzienlijk groter dan de temperatuur alleen doet vermoeden.');
 if(zicht==='beperkt'||zicht==='slecht')r.push('Zicht is '+zicht+': oriëntatie, tijdbewaking en overzicht over de groep zijn lastiger. Vergunningsvoorschriften aangaande mist zijn leidend.');
 else if(nsl==='mist')r.push('Mist: oriëntatie en overzicht over de groep zijn lastig. Vergunningsvoorschriften aangaande mist zijn leidend.');
+if(zonStatus.donker)r.push(zonStatus.tekst+' Oriëntatie, overzicht over de groep en tijdbewaking zijn lastiger in het donker: zorg voor verlichting en reflectie en volg de vergunningsvoorschriften.');
 if(nsl==='regen'||nsl==='sneeuw'||nsl==='ijs')r.push('Neerslag ('+nsl+'): natte kleding, extra afkoeling en minder zicht.');
 if(knmi){
 var extra=[];
@@ -922,6 +992,7 @@ function controleer(){
 tijdberekeningen();
 gidsControle();
 geulReserve();
+zonBerekening();
 var rs=document.getElementById('route');
 document.getElementById('route-anders').hidden=rs.value!=='Anders';
 autoOpmerkingen();
@@ -937,6 +1008,7 @@ if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-doorwaad')||t.hasAttr
 if(t&&(t.hasAttribute('data-diepte')||t.hasAttribute('data-doorwaad')||t.hasAttribute('data-reductie')||t.hasAttribute('data-diepte-tijd')||t===tochtDatum||t===vertrekEl))doorwaadAlle();
 if(t&&t.hasAttribute('data-geengeul')){Array.prototype.forEach.call(form.querySelectorAll('[data-geengeul]'),function(c){c.checked=t.checked;});}
 controleer();
+if(t&&(t===tochtDatum||t===vertrekEl||t===eindEl))weerRisico();
 clearTimeout(timer);timer=setTimeout(function(){save('Automatisch opgeslagen');},600);
 }
 form.addEventListener('input',wijziging);
