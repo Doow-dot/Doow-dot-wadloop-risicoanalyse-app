@@ -56,6 +56,8 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 .doorwaad input[type=text]{width:130px}
 @media screen and (min-width:701px),print{.geul-lijst .geul-rij{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border)}.geul-lijst .geul-rij:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}}
 .dw-info:empty{display:none}
+.stijg-waarschuwing{flex:1 1 100%;background:#fff4f4;border-left:4px solid #cc2b2b;color:#8a1111;font-weight:bold;padding:6px 10px}
+.stijg-waarschuwing:empty{display:none}
 .geul-lijst[data-soort=diepte] .geul-rij{grid-template-columns:auto minmax(90px,.6fr) minmax(260px,1.4fr) 24px}
 .doorwaad input[type=time]{width:140px}
 .doorwaad input[type=number]{width:90px}
@@ -467,7 +469,7 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 </div>
 
 <p class="bewaar-info">Gegevens worden automatisch bewaard, alleen op dit apparaat in deze browser.</p>
-<p class="bewaar-info">Versie: 21-11-2026, 16</p>
+<p class="bewaar-info">Versie: 24-11-2026, 17</p>
 <div id="save-status" role="status" aria-live="polite"></div>
 
 </form>
@@ -662,6 +664,46 @@ if(gevuld&&i+1>max)max=i+1;
 return max;
 }
 Array.prototype.forEach.call(form.querySelectorAll('[data-geul-meer]'),function(b){b.addEventListener('click',function(){toonGeulen(geulAantal+1);});});
+
+/* 6n. Waterstijging rond de 120 cm-grens: cm per 30 min altijd tonen, waarschuwing bij tij boven het gemiddelde van het station */
+var STIJG_VENSTER_MIN=30;
+var GEM_TIJ={'Lauwersoog':230,'Nes (Ameland)':215,'Harlingen':200,'Eemshaven':270};
+function stijgingAnalyse(reeks,tSt){
+var H=3600000,h1=hoogteBij(reeks,tSt),h0=hoogteBij(reeks,tSt-STIJG_VENSTER_MIN*60000);
+if(h1===null||h0===null)return null;
+var lo=Infinity,hi=-Infinity;
+reeks.forEach(function(p){
+if(p[0]>=tSt-6*H&&p[0]<=tSt)lo=Math.min(lo,p[1]);
+if(p[0]>=tSt&&p[0]<=tSt+6*H)hi=Math.max(hi,p[1]);
+});
+var dekking=reeks[0][0]<=tSt-6*H&&reeks[reeks.length-1][0]>=tSt+6*H;
+return {stijg:Math.round(h1-h0),range:(dekking&&isFinite(lo)&&isFinite(hi))?Math.round(hi-lo):null};
+}
+function stijgEls(rij){
+var w=rij.querySelector('[data-stijg-waarschuwing]'),c=rij.querySelector('[data-stijg-cijfers]');
+if(!w||!c){
+var a=rij.querySelector('.dw-info[data-info-uiterste]');
+if(!a)return null;
+if(!w){w=document.createElement('div');w.className='stijg-waarschuwing';w.setAttribute('data-stijg-waarschuwing','');w.setAttribute('aria-live','polite');a.insertAdjacentElement('afterend',w);}
+if(!c){c=document.createElement('div');c.className='dw-info';c.setAttribute('data-stijg-cijfers','');c.setAttribute('aria-live','polite');w.insertAdjacentElement('afterend',c);}
+}
+return {w:w,c:c};
+}
+function stijgWis(rij){
+var e=stijgEls(rij);
+if(e){e.w.textContent='';e.c.textContent='';}
+delete rij.dataset.stijg;
+}
+function stijgToepassen(rij,tSt){
+var e=stijgEls(rij);if(!e||!rwsReeks)return;
+var a=stijgingAnalyse(rwsReeks,tSt);if(!a)return;
+var gem=GEM_TIJ[rwsStation]||null;
+e.c.textContent='Waterstijging: in de '+STIJG_VENSTER_MIN+' min voor het bereiken van 120 cm stijgt het water ongeveer '+a.stijg+' cm. Aan het begin van de reservetijd is de geul dus ongeveer '+a.stijg+' cm minder diep dan 120 cm. Tij tussen laagwater en hoogwater rond dit moment: '+(a.range!==null?'ongeveer '+a.range+' cm':'niet te bepalen (verwachting te kort)')+(gem!==null?' (gemiddeld voor '+rwsStation+' ongeveer '+gem+' cm)':'')+'.';
+if(gem===null||a.range===null||a.range<=gem)return;
+e.w.textContent='LET OP: het tij is groter dan gemiddeld ('+a.range+' cm, gemiddeld ongeveer '+gem+' cm), zoals bij springtij. Er wordt dan meer water verplaatst, dus ook een sterkere stroming is te verwachten. De geul wordt sneller dieper en de uiterste doorwaadtijd is minder nauwkeurig. De reservetijd van minimaal '+RESERVE_MIN+' min is extra belangrijk; houd bij twijfel een ruimere marge aan.';
+rij.dataset.stijg='tij groter dan gemiddeld rond de 120 cm-grens ('+a.range+' cm, gemiddeld ongeveer '+gem+' cm): de geul wordt sneller dieper en de stroming is sterker; de reservetijd van minimaal '+RESERVE_MIN+' min is extra belangrijk.';
+}
+
 /* 6i. Uiterste doorwaadtijd per geul: moment waarop de geul 120 cm diep wordt, uit de verwachte waterstand (RWS, incl. opzet en afwaaiing) */
 var GRENS_DIEPTE=120;
 function hoogteBij(reeks,t){
@@ -700,6 +742,7 @@ function zetUiterste(el,ms){el.value=ms===null?'':lokTijd(ms);el.dispatchEvent(n
 function doorwaadRij(rij){
 var dEl=rij.querySelector('[data-diepte]'),tEl=rij.querySelector('[data-doorwaad]'),uEl=rij.querySelector('[data-uiterste-doorwaad]'),rEl=rij.querySelector('[data-reductie]'),info=rij.querySelector('.dw-info[data-info-uiterste]');
 if(!dEl||!tEl||!uEl||!info)return;
+stijgWis(rij);
 var D=parseFloat(dEl.value);
 if(isNaN(D)||!tEl.value){info.textContent='';return;}
 if(!rwsReeks||!rwsReeks.length){info.textContent='Geen verwachting van Rijkswaterstaat geladen: kies hierboven een meetstation met beschikbare verwachting, of vul de uiterste doorwaadtijd zelf in.';return;}
@@ -727,6 +770,7 @@ return;
 }
 r=Math.floor((r+ms)/60000)*60000;
 zetUiterste(uEl,r);
+stijgToepassen(rij,r-ms);
 info.textContent='Berekend voor '+lokDatum(r)+': de geul bereikt '+GRENS_DIEPTE+' cm bij een verwachte waterstand van '+Math.round(doel)+' cm NAP (op de doorwaadtijd '+Math.round(h0)+' cm NAP, dus +'+Math.round(doel-h0)+' cm).'+redTxt+' Bron: verwachting RWS '+(rwsStation||'')+', inclusief opzet en afwaaiing; aanname: de diepte volgt de waterstand 1 op 1 en de reductie is een vaste tijdverschuiving van het hele getij. Controleer zelf.';
 }
 function absTijd(tijd){
@@ -968,6 +1012,7 @@ if(g.r!==null){
 if(g.r<RESERVE_MIN)r.push(nm+': reservetijd '+g.r+' min tot de uiterste doorwaadtijd, minder dan '+RESERVE_MIN+' min.');
 else if(g.r<60)r.push(nm+': beperkte tijdsmarge ('+g.r+' min tot de uiterste doorwaadtijd): bij een kleine vertraging wordt de geul te diep.');
 }else r.push(nm+': tijdsmarge niet te bepalen (verwachte of uiterste doorwaadtijd ontbreekt).');
+if(rij.dataset.stijg)r.push(nm+': '+rij.dataset.stijg);
 });
 var uw=form.querySelector('input[name="uitwijk"]:checked');
 if(uw&&slug(uw.closest('label').textContent)==='Niet aanwezig'){data=true;r.push('Geen uitwijkmogelijkheden: bij vertraging of te hoog water is er geen alternatief.');}
