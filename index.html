@@ -135,6 +135,12 @@ textarea{resize:none}
 
 <form novalidate>
 
+<h2>WERKWIJZE</h2>
+
+<div class="instructions">
+Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen. Het formulier maakt een inschatting van het risico per onderdeel en vat de belangrijkste risico’s samen onder Opmerkingen. Het is een hulpmiddel voor de risico-inschatting en geen handhavingsdocument: verwerk de groepskenmerken zelf in het tijdschema en de route. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
+</div>
+
 <h2>0 | TOCHTGEGEVENS</h2>
 
 <table>
@@ -198,12 +204,6 @@ textarea{resize:none}
 </td>
 </tr>
 </table>
-
-<h2>WERKWIJZE</h2>
-
-<div class="instructions">
-Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen. Het formulier maakt een inschatting van het risico per onderdeel en vat de belangrijkste risico’s samen onder Opmerkingen. Het is een hulpmiddel voor de risico-inschatting en geen handhavingsdocument: verwerk de groepskenmerken zelf in het tijdschema en de route. Volg altijd de vergunning, lokale afspraken en aanwijzingen van bevoegde instanties.
-</div>
 
 <h2>1 | WEER</h2>
 
@@ -309,7 +309,7 @@ Vul de kerngegevens in en laat het formulier de weer- en waterinformatie inladen
 <tr>
 <th scope="row">Verwachte verandering tijdens tocht</th>
 <td>
-<input type="text" data-verandering placeholder="wordt ingevuld uit de KNMI-gegevens (of zelf invullen)">
+<textarea data-verandering rows="1" style="min-height:44px;overflow:hidden;resize:none" placeholder="wordt ingevuld uit de KNMI-gegevens (of zelf invullen)"></textarea>
 </td>
 </tr>
 
@@ -364,24 +364,24 @@ Let in het bijzonder op draaiende wind, snel veranderend weer, beperkt zicht, on
 <th scope="row">Verwachte geuldiepten</th>
 <td>
 <div style="margin-bottom:10px"><label><input type="checkbox" data-geengeul> Geen geulen op deze route</label></div>
-<p style="margin:0 0 10px">Vul per geul de verwachte diepte op de verwachte doorwaadtijd in. Loopt het laagwater bij de geul later of eerder dan bij het meetstation, vul dan de reductie in minuten in (+ = later, − = eerder). De uiterste doorwaadtijd is het moment waarop de geul 120 cm diep wordt, berekend uit de verwachte waterstand van Rijkswaterstaat (inclusief opzet en afwaaiing) bij het meetstation hierboven. Reservetijd = uiterste doorwaadtijd min verwachte doorwaadtijd. Bij minder dan 30 minuten (of een negatieve reservetijd) wordt de reservetijd rood weergegeven.</p>
+<p style="margin:0 0 10px">Vul per geul de verwachte waaddiepte op de verwachte doorwaadtijd in. Loopt het laagwater bij de geul later of eerder dan bij het meetstation, vul dan de reductie in minuten in (+ = later, − = eerder). De uiterste doorwaadtijd is het moment waarop de geul 120 cm diep wordt, berekend uit de verwachte waterstand van Rijkswaterstaat (inclusief opzet en afwaaiing) bij het meetstation hierboven. Reservetijd = uiterste doorwaadtijd min verwachte doorwaadtijd. Bij minder dan 30 minuten (of een negatieve reservetijd) wordt de reservetijd rood weergegeven.</p>
 <div class="geul-lijst" data-soort="diepte">
 <div class="geul-rij"><span class="geul-label">Geul 1</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 1 naam">
-<input type="number" min="0" placeholder="Diepte (op basis van verkenningen)" data-diepte aria-label="Geul 1 diepte in cm"><span>cm</span>
-<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="1" aria-label="Geul 1 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="1" aria-label="Geul 1 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="1" aria-label="Geul 1 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte diepte op tijdstip <input type="time" data-diepte-tijd="1" aria-label="Geul 1 tijdstip voor verwachte diepte"></label><label><input type="text" readonly data-diepte-op="1" placeholder="diepte (cm)" aria-label="Geul 1 verwachte diepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
+<input type="number" min="0" placeholder="Waaddiepte (op basis van verkenningen)" data-diepte aria-label="Geul 1 waaddiepte in cm"><span>cm</span>
+<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="1" aria-label="Geul 1 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="1" aria-label="Geul 1 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="1" aria-label="Geul 1 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte waaddiepte op tijdstip <input type="time" data-diepte-tijd="1" aria-label="Geul 1 tijdstip voor verwachte waaddiepte"></label><label><input type="text" readonly data-diepte-op="1" placeholder="waaddiepte (cm)" aria-label="Geul 1 verwachte waaddiepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
 <div class="geul-rij"><span class="geul-label">Geul 2</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 2 naam">
-<input type="number" min="0" placeholder="Diepte (op basis van verkenningen)" data-diepte aria-label="Geul 2 diepte in cm"><span>cm</span>
-<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="2" aria-label="Geul 2 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="2" aria-label="Geul 2 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="2" aria-label="Geul 2 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte diepte op tijdstip <input type="time" data-diepte-tijd="2" aria-label="Geul 2 tijdstip voor verwachte diepte"></label><label><input type="text" readonly data-diepte-op="2" placeholder="diepte (cm)" aria-label="Geul 2 verwachte diepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
+<input type="number" min="0" placeholder="Waaddiepte (op basis van verkenningen)" data-diepte aria-label="Geul 2 waaddiepte in cm"><span>cm</span>
+<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="2" aria-label="Geul 2 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="2" aria-label="Geul 2 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="2" aria-label="Geul 2 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte waaddiepte op tijdstip <input type="time" data-diepte-tijd="2" aria-label="Geul 2 tijdstip voor verwachte waaddiepte"></label><label><input type="text" readonly data-diepte-op="2" placeholder="waaddiepte (cm)" aria-label="Geul 2 verwachte waaddiepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
 <div class="geul-rij" hidden><span class="geul-label">Geul 3</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 3 naam">
-<input type="number" min="0" placeholder="Diepte (op basis van verkenningen)" data-diepte aria-label="Geul 3 diepte in cm"><span>cm</span>
-<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="3" aria-label="Geul 3 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="3" aria-label="Geul 3 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="3" aria-label="Geul 3 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte diepte op tijdstip <input type="time" data-diepte-tijd="3" aria-label="Geul 3 tijdstip voor verwachte diepte"></label><label><input type="text" readonly data-diepte-op="3" placeholder="diepte (cm)" aria-label="Geul 3 verwachte diepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
+<input type="number" min="0" placeholder="Waaddiepte (op basis van verkenningen)" data-diepte aria-label="Geul 3 waaddiepte in cm"><span>cm</span>
+<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="3" aria-label="Geul 3 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="3" aria-label="Geul 3 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="3" aria-label="Geul 3 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte waaddiepte op tijdstip <input type="time" data-diepte-tijd="3" aria-label="Geul 3 tijdstip voor verwachte waaddiepte"></label><label><input type="text" readonly data-diepte-op="3" placeholder="waaddiepte (cm)" aria-label="Geul 3 verwachte waaddiepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
 <div class="geul-rij" hidden><span class="geul-label">Geul 4</span>
 <input type="text" placeholder="Geulnaam" aria-label="Geul 4 naam">
-<input type="number" min="0" placeholder="Diepte (op basis van verkenningen)" data-diepte aria-label="Geul 4 diepte in cm"><span>cm</span>
-<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="4" aria-label="Geul 4 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="4" aria-label="Geul 4 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="4" aria-label="Geul 4 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte diepte op tijdstip <input type="time" data-diepte-tijd="4" aria-label="Geul 4 tijdstip voor verwachte diepte"></label><label><input type="text" readonly data-diepte-op="4" placeholder="diepte (cm)" aria-label="Geul 4 verwachte diepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
+<input type="number" min="0" placeholder="Waaddiepte (op basis van verkenningen)" data-diepte aria-label="Geul 4 waaddiepte in cm"><span>cm</span>
+<div class="doorwaad"><div class="dw-regel"><label>Verwachte doorwaadtijd <input type="time" data-tijd="plan" data-doorwaad="4" aria-label="Geul 4 verwachte doorwaadtijd"></label><label>Reductie laagwater (min) <input type="number" step="1" placeholder="0" data-reductie="4" aria-label="Geul 4 reductie laagwatertijd in minuten ten opzichte van het meetstation"></label><label>Uiterste doorwaadtijd (120 cm) <input type="time" data-uiterste-doorwaad="4" aria-label="Geul 4 uiterste doorwaadtijd bij diepte 120 cm"></label><span class="reserve-uit" aria-live="polite"></span></div><div class="dw-info" data-info-uiterste aria-live="polite"></div><div class="dw-regel"><label>Verwachte waaddiepte op tijdstip <input type="time" data-diepte-tijd="4" aria-label="Geul 4 tijdstip voor verwachte waaddiepte"></label><label><input type="text" readonly data-diepte-op="4" placeholder="waaddiepte (cm)" aria-label="Geul 4 verwachte waaddiepte op dat tijdstip"></label></div><div class="dw-info" data-info-diepte aria-live="polite"></div></div></div>
 </div>
 <div class="geul-meer"><button type="button" class="secondary" data-geul-meer>Geul toevoegen</button></div>
 <div id="reserve-advies" role="status" hidden></div>
